@@ -1,0 +1,597 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B284E58920D02B7400A6466E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E58820D02B7400A6466E /* AppDelegate.swift */; };
+		B284E58B20D02B7400A6466E /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E58A20D02B7400A6466E /* ViewController.swift */; };
+		B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = B284E58C20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld */; };
+		B284E59020D02B7600A6466E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B284E58F20D02B7600A6466E /* Assets.xcassets */; };
+		B284E59320D02B7600A6466E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B284E59120D02B7600A6466E /* Main.storyboard */; };
+		B284E59F20D02B7700A6466E /* Cloud_Database_MaintenanceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E59E20D02B7700A6466E /* Cloud_Database_MaintenanceTests.swift */; };
+		B284E5AA20D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		B284E59B20D02B7700A6466E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B284E57D20D02B7400A6466E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B284E58420D02B7400A6466E;
+			remoteInfo = "Cloud Database Maintenance";
+		};
+		B284E5A620D02B7700A6466E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B284E57D20D02B7400A6466E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B284E58420D02B7400A6466E;
+			remoteInfo = "Cloud Database Maintenance";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		B284E58520D02B7400A6466E /* Cloud Database Maintenance.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Cloud Database Maintenance.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B284E58820D02B7400A6466E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		B284E58A20D02B7400A6466E /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B284E58D20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Cloud_Database_Maintenance.xcdatamodel; sourceTree = "<group>"; };
+		B284E58F20D02B7600A6466E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B284E59220D02B7600A6466E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B284E59420D02B7600A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B284E59520D02B7600A6466E /* Cloud_Database_Maintenance.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Cloud_Database_Maintenance.entitlements; sourceTree = "<group>"; };
+		B284E59A20D02B7700A6466E /* Cloud Database MaintenanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cloud Database MaintenanceTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B284E59E20D02B7700A6466E /* Cloud_Database_MaintenanceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud_Database_MaintenanceTests.swift; sourceTree = "<group>"; };
+		B284E5A020D02B7700A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B284E5A520D02B7700A6466E /* Cloud Database MaintenanceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Cloud Database MaintenanceUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Cloud_Database_MaintenanceUITests.swift; sourceTree = "<group>"; };
+		B284E5AB20D02B7700A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B284E58220D02B7400A6466E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E59720D02B7700A6466E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E5A220D02B7700A6466E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B284E57C20D02B7400A6466E = {
+			isa = PBXGroup;
+			children = (
+				B284E58720D02B7400A6466E /* Cloud Database Maintenance */,
+				B284E59D20D02B7700A6466E /* Cloud Database MaintenanceTests */,
+				B284E5A820D02B7700A6466E /* Cloud Database MaintenanceUITests */,
+				B284E58620D02B7400A6466E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B284E58620D02B7400A6466E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B284E58520D02B7400A6466E /* Cloud Database Maintenance.app */,
+				B284E59A20D02B7700A6466E /* Cloud Database MaintenanceTests.xctest */,
+				B284E5A520D02B7700A6466E /* Cloud Database MaintenanceUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B284E58720D02B7400A6466E /* Cloud Database Maintenance */ = {
+			isa = PBXGroup;
+			children = (
+				B284E58820D02B7400A6466E /* AppDelegate.swift */,
+				B284E58A20D02B7400A6466E /* ViewController.swift */,
+				B284E58F20D02B7600A6466E /* Assets.xcassets */,
+				B284E59120D02B7600A6466E /* Main.storyboard */,
+				B284E59420D02B7600A6466E /* Info.plist */,
+				B284E59520D02B7600A6466E /* Cloud_Database_Maintenance.entitlements */,
+				B284E58C20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld */,
+			);
+			path = "Cloud Database Maintenance";
+			sourceTree = "<group>";
+		};
+		B284E59D20D02B7700A6466E /* Cloud Database MaintenanceTests */ = {
+			isa = PBXGroup;
+			children = (
+				B284E59E20D02B7700A6466E /* Cloud_Database_MaintenanceTests.swift */,
+				B284E5A020D02B7700A6466E /* Info.plist */,
+			);
+			path = "Cloud Database MaintenanceTests";
+			sourceTree = "<group>";
+		};
+		B284E5A820D02B7700A6466E /* Cloud Database MaintenanceUITests */ = {
+			isa = PBXGroup;
+			children = (
+				B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */,
+				B284E5AB20D02B7700A6466E /* Info.plist */,
+			);
+			path = "Cloud Database MaintenanceUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B284E58420D02B7400A6466E /* Cloud Database Maintenance */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B284E5AE20D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database Maintenance" */;
+			buildPhases = (
+				B284E58120D02B7400A6466E /* Sources */,
+				B284E58220D02B7400A6466E /* Frameworks */,
+				B284E58320D02B7400A6466E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Cloud Database Maintenance";
+			productName = "Cloud Database Maintenance";
+			productReference = B284E58520D02B7400A6466E /* Cloud Database Maintenance.app */;
+			productType = "com.apple.product-type.application";
+		};
+		B284E59920D02B7700A6466E /* Cloud Database MaintenanceTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B284E5B120D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database MaintenanceTests" */;
+			buildPhases = (
+				B284E59620D02B7700A6466E /* Sources */,
+				B284E59720D02B7700A6466E /* Frameworks */,
+				B284E59820D02B7700A6466E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B284E59C20D02B7700A6466E /* PBXTargetDependency */,
+			);
+			name = "Cloud Database MaintenanceTests";
+			productName = "Cloud Database MaintenanceTests";
+			productReference = B284E59A20D02B7700A6466E /* Cloud Database MaintenanceTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		B284E5A420D02B7700A6466E /* Cloud Database MaintenanceUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B284E5B420D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database MaintenanceUITests" */;
+			buildPhases = (
+				B284E5A120D02B7700A6466E /* Sources */,
+				B284E5A220D02B7700A6466E /* Frameworks */,
+				B284E5A320D02B7700A6466E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B284E5A720D02B7700A6466E /* PBXTargetDependency */,
+			);
+			name = "Cloud Database MaintenanceUITests";
+			productName = "Cloud Database MaintenanceUITests";
+			productReference = B284E5A520D02B7700A6466E /* Cloud Database MaintenanceUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B284E57D20D02B7400A6466E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0940;
+				LastUpgradeCheck = 0940;
+				ORGANIZATIONNAME = "Marc Shearer";
+				TargetAttributes = {
+					B284E58420D02B7400A6466E = {
+						CreatedOnToolsVersion = 9.4;
+					};
+					B284E59920D02B7700A6466E = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = B284E58420D02B7400A6466E;
+					};
+					B284E5A420D02B7700A6466E = {
+						CreatedOnToolsVersion = 9.4;
+						TestTargetID = B284E58420D02B7400A6466E;
+					};
+				};
+			};
+			buildConfigurationList = B284E58020D02B7400A6466E /* Build configuration list for PBXProject "Cloud Database Maintenance" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B284E57C20D02B7400A6466E;
+			productRefGroup = B284E58620D02B7400A6466E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B284E58420D02B7400A6466E /* Cloud Database Maintenance */,
+				B284E59920D02B7700A6466E /* Cloud Database MaintenanceTests */,
+				B284E5A420D02B7700A6466E /* Cloud Database MaintenanceUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B284E58320D02B7400A6466E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B284E59020D02B7600A6466E /* Assets.xcassets in Resources */,
+				B284E59320D02B7600A6466E /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E59820D02B7700A6466E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E5A320D02B7700A6466E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B284E58120D02B7400A6466E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */,
+				B284E58B20D02B7400A6466E /* ViewController.swift in Sources */,
+				B284E58920D02B7400A6466E /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E59620D02B7700A6466E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B284E59F20D02B7700A6466E /* Cloud_Database_MaintenanceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B284E5A120D02B7700A6466E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B284E5AA20D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		B284E59C20D02B7700A6466E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B284E58420D02B7400A6466E /* Cloud Database Maintenance */;
+			targetProxy = B284E59B20D02B7700A6466E /* PBXContainerItemProxy */;
+		};
+		B284E5A720D02B7700A6466E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B284E58420D02B7400A6466E /* Cloud Database Maintenance */;
+			targetProxy = B284E5A620D02B7700A6466E /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		B284E59120D02B7600A6466E /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B284E59220D02B7600A6466E /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B284E5AC20D02B7700A6466E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		B284E5AD20D02B7700A6466E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		B284E5AF20D02B7700A6466E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database Maintenance/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-Maintenance";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		B284E5B020D02B7700A6466E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database Maintenance/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-Maintenance";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Release;
+		};
+		B284E5B220D02B7700A6466E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database MaintenanceTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-MaintenanceTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cloud Database Maintenance.app/Contents/MacOS/Cloud Database Maintenance";
+			};
+			name = Debug;
+		};
+		B284E5B320D02B7700A6466E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database MaintenanceTests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-MaintenanceTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Cloud Database Maintenance.app/Contents/MacOS/Cloud Database Maintenance";
+			};
+			name = Release;
+		};
+		B284E5B520D02B7700A6466E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database MaintenanceUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-MaintenanceUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_TARGET_NAME = "Cloud Database Maintenance";
+			};
+			name = Debug;
+		};
+		B284E5B620D02B7700A6466E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 3T7CT2S464;
+				INFOPLIST_FILE = "Cloud Database MaintenanceUITests/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-MaintenanceUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TEST_TARGET_NAME = "Cloud Database Maintenance";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B284E58020D02B7400A6466E /* Build configuration list for PBXProject "Cloud Database Maintenance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B284E5AC20D02B7700A6466E /* Debug */,
+				B284E5AD20D02B7700A6466E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B284E5AE20D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database Maintenance" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B284E5AF20D02B7700A6466E /* Debug */,
+				B284E5B020D02B7700A6466E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B284E5B120D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database MaintenanceTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B284E5B220D02B7700A6466E /* Debug */,
+				B284E5B320D02B7700A6466E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B284E5B420D02B7700A6466E /* Build configuration list for PBXNativeTarget "Cloud Database MaintenanceUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B284E5B520D02B7700A6466E /* Debug */,
+				B284E5B620D02B7700A6466E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		B284E58C20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				B284E58D20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodel */,
+			);
+			currentVersion = B284E58D20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodel */;
+			path = Cloud_Database_Maintenance.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = B284E57D20D02B7400A6466E /* Project object */;
+}
