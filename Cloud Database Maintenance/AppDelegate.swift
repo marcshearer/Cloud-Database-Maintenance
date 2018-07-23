@@ -11,24 +11,67 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
-    let popover = NSPopover()
-
-    @IBOutlet weak var backupMenuItem: NSMenuItem!
+    private let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+    public var backupDateMenuItem: NSMenuItem!
+    public var backupMenuItem: NSMenuItem!
+    private var databaseMaintenanceWindowController: NSWindowController!
+    private var backupWindowController: NSWindowController!
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
         
-        self.enableMenus(backupMenuItemEnabled: true)
+         if let button = statusItem.button {
+            button.image = NSImage(named:NSImage.Name("two"))
+        }
+        constructMenu()
     }
-
+    
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
     }
     
-    func enableMenus(backupMenuItemEnabled: Bool) {
-        self.backupMenuItem.isEnabled = backupMenuItemEnabled
+    func constructMenu() {
+        let menu = NSMenu()
+        
+        let lastBackup = UserDefaults.standard.string(forKey: "backupDate") ?? "No previous backup"
+        let backupTitleMenuItem = menu.addItem(withTitle: "Last backup", action: nil, keyEquivalent: "")
+        backupTitleMenuItem.isEnabled = false
+        self.backupDateMenuItem = menu.addItem(withTitle: lastBackup, action: nil, keyEquivalent: "")
+        self.backupDateMenuItem.isEnabled = false
+        menu.addItem(NSMenuItem.separator())
+        self.backupMenuItem = menu.addItem(withTitle: "Backup database", action: #selector(AppDelegate.backup(_:)), keyEquivalent: "B")
+        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "D")
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        
+        statusItem.title = "Whist"
+        statusItem.menu = menu
     }
 
+    @objc func backup(_ sender: Any?) {
+        backupWindowController = self.showMenubarWindow(menubarWindowController: backupWindowController, windowIdentifier: "BackupWindow")
+    }
+    
+    @objc func maintenance(_ sender: Any?) {
+        databaseMaintenanceWindowController = self.showMenubarWindow(menubarWindowController: self.databaseMaintenanceWindowController, windowIdentifier: "MaintenanceWindow")
+    }
+    
+    func showMenubarWindow(menubarWindowController: NSWindowController! = nil, windowIdentifier: String) -> NSWindowController {
+        var returnedWindowController: NSWindowController!
+        
+        if menubarWindowController == nil {
+            let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
+            let menubarWindowIdentifier = NSStoryboard.SceneIdentifier(rawValue: windowIdentifier)
+            returnedWindowController = mainStoryboard.instantiateController(withIdentifier: menubarWindowIdentifier) as! NSWindowController
+        } else {
+            returnedWindowController = menubarWindowController
+        }
+        returnedWindowController.showWindow(self)
+        returnedWindowController.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        return returnedWindowController
+    }
+    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {

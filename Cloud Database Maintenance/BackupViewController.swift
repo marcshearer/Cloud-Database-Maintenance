@@ -8,6 +8,7 @@
 
 import Cocoa
 import CloudKit
+import Foundation
 
 class BackupViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
 
@@ -17,42 +18,40 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
     private var results: [ (table: String, message: String) ] = []
     private var errors = false
     private var count = 0
+    private var firstTime = true
     
     @IBOutlet weak var tableView: NSTableView!
     @IBOutlet weak var closeButton: NSButton!
     
     @IBAction func closeButtonClick(_ sender: NSButton) {
-        enableMenus(backupMenuItemEnabled: true)
-        self.dismiss(sender)
+        self.setBackupMenu(title: "Backup database")
+        self.view.window?.close()
+        self.firstTime = true
     }
     
-    override func viewDidLoad() {
-        enableMenus(backupMenuItemEnabled: false)
-    }
-
     override func viewDidAppear() {
         super.viewDidAppear()
         
-        for index in 0...1 {
-            let tableColumn = NSTableColumn()
-            let headerCell = NSTableHeaderCell()
-            headerCell.title = (index == 0 ? "Table" : "Message")
-            headerCell.alignment = .left
-            tableColumn.headerCell = headerCell
-            tableColumn.width = 200
-            tableColumn.identifier = NSUserInterfaceItemIdentifier(headerCell.title)
-            self.tableView.addTableColumn(tableColumn)
+        if self.firstTime {
+            self.tables = []
+            self.errors = false
+            self.count = 0
+            tableView.beginUpdates()
+            self.results = []
+            tableView.reloadData()
+            tableView.endUpdates()
+            self.dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-HH-mm-ss-SSS", localized: false)
+            self.setBackupMenu(title: "Backup in progress")
+            self.addTable(recordType: "Players", groupName: "players", elementName:  "player")
+            self.addTable(recordType: "Games", groupName: "games", elementName:  "game")
+            self.addTable(recordType: "Participants", groupName: "participants", elementName:  "participant")
+            self.addTable(recordType: "Invites", groupName: "invites", elementName:  "invite")
+            self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
+            self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
+            self.firstTime = false
+            
+            self.backupNext()
         }
-        
-        dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-HH-mm-ss-SSS", localized: false)
-        self.addTable(recordType: "Players", groupName: "players", elementName:  "player")
-        self.addTable(recordType: "Games", groupName: "games", elementName:  "game")
-        self.addTable(recordType: "Participants", groupName: "participants", elementName:  "participant")
-        self.addTable(recordType: "Invites", groupName: "invites", elementName:  "invite")
-        self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
-        self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
-        
-        self.backup()
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {
@@ -81,9 +80,17 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
         return NSCell(textCell: value)
     }
 
-    func backup() {
+    func backupNext() {
         if self.count > self.tables.count - 1 {
-            self.closeButton.isEnabled = true
+            Utility.mainThread {
+                if !self.errors {
+                    let backupDate = Utility.dateString(Date(), format: "EEEE dd MMMM YYYY HH:mm", localized: true)
+                    UserDefaults.standard.set(backupDate, forKey: "backupDate")
+                    Utility.appDelegate?.backupDateMenuItem.title = backupDate
+                    self.setBackupMenu(title: "Backup complete\((self.errors ? " with errors" : ""))")
+                }
+                self.closeButton.isEnabled = true
+            }
         } else {
             self.backupTable(recordType: self.tables[self.count].recordType, groupName: self.tables[self.count].groupName, elementName: self.tables[self.count].elementName)
             self.count += 1
@@ -102,7 +109,7 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
        
         Utility.mainThread {
             self.tableView.beginUpdates()
-            self.results.append((recordType, "Backing up '\(recordType)'..."))
+            self.results.append((recordType, "Backing up \(recordType)..."))
             self.tableView.insertRows(at: IndexSet(integer: self.results.count - 1), withAnimation: .slideUp)
             self.tableView.endUpdates()
         }
@@ -129,12 +136,11 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
                                         self.errors = self.errors || !ok
                                         Utility.mainThread {
                                             self.tableView.beginUpdates()
-                                            self.results[self.results.count - 1].message = (ok ? "Successfully backed up" : ( errorMessage != "" ? errorMessage : "Unexpected error"))
+                                            self.results[self.results.count - 1].message = (ok ? "Successfully backed up \(records) \(recordType)" : ( errorMessage != "" ? errorMessage : "Unexpected error"))
                                             self.tableView.reloadData(forRowIndexes: IndexSet(integer: self.results.count - 1), columnIndexes: IndexSet(integer: 1))
                                             self.tableView.endUpdates()
-                                        }
-                                        self.backup()
-                                        
+                                        }   
+                                        self.backupNext()                                        
             },
                                      failureAction: { (message) in
                                         fileHandle.closeFile()
@@ -185,9 +191,7 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
         fileHandle.write(data)
     }
     
-    private func enableMenus(backupMenuItemEnabled: Bool) {
-        if let applicationDelegate = NSApplication.shared.delegate as? AppDelegate {
-            applicationDelegate.enableMenus(backupMenuItemEnabled: backupMenuItemEnabled)
-        }
+    private func setBackupMenu(title: String) {
+        Utility.appDelegate?.backupMenuItem.title = title
     }
 }

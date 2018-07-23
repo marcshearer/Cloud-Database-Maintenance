@@ -1,5 +1,5 @@
 //
-//  HomeViewController.swift
+//  MaintenanceViewController.swift
 //  Cloud Database Maintenance
 //
 //  Created by Marc Shearer on 12/06/2018.
@@ -26,20 +26,16 @@ struct Layout {
     var total: Bool
 }
 
-class HomeViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, TableViewerDelegate {
+class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, TableViewerDelegate {
     
     private var playersLayout: [Layout]!
     private var gamesLayout: [Layout]!
     private var participantsLayout: [Layout]!
     private var tableViewer: TableViewer!
+    private var firstTime = true
 
     @IBOutlet weak var tableList: NSTableView!
     @IBOutlet weak var tableView: NSTableView!
-    @IBOutlet weak var backupButton: NSButtonCell!
-    
-    @IBAction func backupMenuItemSelected(_ sender: Any) {
-        self.performSegue(withIdentifier: NSStoryboardSegue.Identifier(rawValue: "BackupSegue"), sender: sender)
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +48,7 @@ class HomeViewController: NSViewController, NSTableViewDataSource, NSTableViewDe
         self.tableViewer = TableViewer(displayTableView: self.tableView)
         self.tableViewer.delegate = self
     }
-
+    
     override var representedObject: Any? {
         didSet {
         // Update the view, if already loaded.
@@ -87,6 +83,13 @@ class HomeViewController: NSViewController, NSTableViewDataSource, NSTableViewDe
             if let gameUUID = Utility.objectString(cloudObject: record, forKey: "gameUUID") {
                 let predicate = NSPredicate(format: "gameUUID = %@", gameUUID)
                 self.tableViewer.show(recordType: "Participants", layout: self.participantsLayout, sortAscending: true, predicate: predicate)
+                self.tableList.deselectAll(self)
+                result = true
+            }
+        case "Participants":
+            if let email = Utility.objectString(cloudObject: record, forKey: "email") {
+                let predicate = NSPredicate(format: "email = %@", email)
+                self.tableViewer.show(recordType: "Players", layout: self.playersLayout, sortAscending: true, predicate: predicate)
                 self.tableList.deselectAll(self)
                 result = true
             }
@@ -130,6 +133,11 @@ class HomeViewController: NSViewController, NSTableViewDataSource, NSTableViewDe
         switch row {
         case 0:
             table = "Players"
+            if firstTime {
+                self.tableViewer.show(recordType: "Players", layout: self.playersLayout, sortAscending: true)
+                tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+                firstTime = false
+            }
         case 1:
             table = "Games"
         case 2:

@@ -8,6 +8,7 @@
 
 import CoreData
 import CloudKit
+import Cocoa
 
 class Utility {
     
@@ -269,6 +270,15 @@ class Utility {
     
     // MARK: - Functions to get view controllers, use main thread and wrapper system level stuff ==============
     
+    public static var appDelegate: AppDelegate? {
+        get {
+            if let delegate = NSApplication.shared.delegate as? AppDelegate {
+                return delegate
+            } else {
+                return nil
+            }
+        }
+    }
     
     public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryCursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
         // Fetch data from cloud
