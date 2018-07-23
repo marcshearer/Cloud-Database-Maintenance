@@ -11,14 +11,22 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
 
+    let popover = NSPopover()
 
-
+    @IBOutlet weak var backupMenuItem: NSMenuItem!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
+        
+        self.enableMenus(backupMenuItemEnabled: true)
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
         // Insert code here to tear down your application
+    }
+    
+    func enableMenus(backupMenuItemEnabled: Bool) {
+        self.backupMenuItem.isEnabled = backupMenuItemEnabled
     }
 
     // MARK: - Core Data stack
@@ -49,8 +57,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         })
         return container
     }()
-
-    // MARK: - Core Data Saving and Undo support
+   
+// MARK: - Core Data Saving and Undo support
 
     @IBAction func saveAction(_ sender: AnyObject?) {
         // Performs the save action for the application, which is to send the save: message to the application's managed object context. Any encountered errors are presented to the user.

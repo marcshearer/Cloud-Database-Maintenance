@@ -194,6 +194,11 @@ class Utility {
         return result
     }
     
+    class func objectAsString(cloudObject: CKRecord, forKey: String) -> String {
+        let object = cloudObject[forKey]
+        return "\(object!)"
+    }
+    
   
     //MARK: Compare version numbers =======================================================================
     
