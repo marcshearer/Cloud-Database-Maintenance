@@ -21,7 +21,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to initialize your application
         
          if let button = statusItem.button {
-            button.image = NSImage(named:NSImage.Name("two"))
+            button.image = NSImage(named:NSImage.Name("spade"))
         }
         constructMenu()
     }
@@ -44,7 +44,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         
-        statusItem.title = "Whist"
         statusItem.menu = menu
     }
 
