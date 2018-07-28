@@ -12,10 +12,12 @@ import Cocoa
 class AppDelegate: NSObject, NSApplicationDelegate {
 
     private let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+    
     public var backupDateMenuItem: NSMenuItem!
     public var backupMenuItem: NSMenuItem!
     private var databaseMaintenanceWindowController: NSWindowController!
     private var backupWindowController: NSWindowController!
+    private var timer = Timer()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         // Insert code here to initialize your application
@@ -24,6 +26,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             button.image = NSImage(named:NSImage.Name("spade"))
         }
         constructMenu()
+        runPeriodically(every: 60 * 60) // Every hour
+    }
+    
+    func runPeriodically(every timeInterval: Int) {
+        self.timer = Timer.scheduledTimer(
+            timeInterval: TimeInterval(timeInterval),
+            target: self,
+            selector: #selector(AppDelegate.conditionalBackup(_:)),
+            userInfo: nil,
+            repeats: true)
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -32,6 +44,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     func constructMenu() {
         let menu = NSMenu()
+        menu.autoenablesItems = false
         
         let lastBackup = UserDefaults.standard.string(forKey: "backupDate") ?? "No previous backup"
         let backupTitleMenuItem = menu.addItem(withTitle: "Last backup", action: nil, keyEquivalent: "")
@@ -40,10 +53,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.backupDateMenuItem.isEnabled = false
         menu.addItem(NSMenuItem.separator())
         self.backupMenuItem = menu.addItem(withTitle: "Backup database", action: #selector(AppDelegate.backup(_:)), keyEquivalent: "B")
-        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "D")
+        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "M")
+        // menu.addItem(NSMenuItem.separator())
+        // menu.addItem(withTitle: "Backup if needed", action: #selector(AppDelegate.conditionalBackup(_:)), keyEquivalent: "C")
+        // menu.addItem(withTitle: "Reset backup date", action: #selector(AppDelegate.setLastBackupDate(_:)), keyEquivalent: "R")
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
-        
         statusItem.menu = menu
     }
 
@@ -53,6 +68,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func maintenance(_ sender: Any?) {
         databaseMaintenanceWindowController = self.showMenubarWindow(menubarWindowController: self.databaseMaintenanceWindowController, windowIdentifier: "MaintenanceWindow")
+    }
+    
+    @objc func conditionalBackup(_ sender: Any?) {
+        MenuBar.checkLastBackup()
+    }
+    
+    @objc func setLastBackupDate(_ sender: Any?) {
+        if let backupDate = Utility.dateFromString("01/01/2018", format: "dd/MM/yyyy") {
+            MenuBar.setBackupDate(backupDate: backupDate)
+        }
     }
     
     func showMenubarWindow(menubarWindowController: NSWindowController! = nil, windowIdentifier: String) -> NSWindowController {

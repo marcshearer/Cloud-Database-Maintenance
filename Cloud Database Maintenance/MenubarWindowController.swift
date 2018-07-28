@@ -16,5 +16,4 @@ class MenubarWindowController: NSWindowController {
         self.window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
-    
 }
