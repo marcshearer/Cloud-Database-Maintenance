@@ -11,6 +11,8 @@ Long-term bugs
 
 Short-term
 ----------
+Add auto-backup
+Add sort and filter
 
 Medium-term
 -----------

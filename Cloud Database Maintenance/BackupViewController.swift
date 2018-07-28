@@ -80,7 +80,7 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
         return NSCell(textCell: value)
     }
 
-    func backupNext() {
+    private func backupNext() {
         if self.count > self.tables.count - 1 {
             Utility.mainThread {
                 if !self.errors {
@@ -92,7 +92,19 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
                 self.closeButton.isEnabled = true
             }
         } else {
-            self.backupTable(recordType: self.tables[self.count].recordType, groupName: self.tables[self.count].groupName, elementName: self.tables[self.count].elementName)
+            self.backupTable(recordType: self.tables[self.count].recordType,
+                             groupName: self.tables[self.count].groupName,
+                             elementName: self.tables[self.count].elementName,
+                             completion: { (ok, message) in
+                                self.errors = self.errors || !ok
+                                Utility.mainThread {
+                                    self.tableView.beginUpdates()
+                                    self.results[self.results.count - 1].message = message
+                                    self.tableView.reloadData(forRowIndexes: IndexSet(integer: self.results.count - 1), columnIndexes: IndexSet(integer: 1))
+                                    self.tableView.endUpdates()
+                                }
+                                self.backupNext()
+            })
             self.count += 1
         }
     }
@@ -101,12 +113,8 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
         self.tables.append((recordType, groupName, elementName))
     }
     
-    func backupTable(recordType: String, groupName: String, elementName: String) {
-        var records = 0
-        var errorMessage = ""
-        var ok = false
-        var recordsWrittenOk = true
-       
+    private func backupTable(recordType: String, groupName: String, elementName: String, completion: @escaping (Bool, String)->()) {
+        
         Utility.mainThread {
             self.tableView.beginUpdates()
             self.results.append((recordType, "Backing up \(recordType)..."))
@@ -114,81 +122,7 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
             self.tableView.endUpdates()
         }
         
-        if let fileHandle = openFile(recordType: recordType) {
-            self.writeString(fileHandle: fileHandle, string: "{ \(groupName) : {\n")
-            _ = self.iCloud.download(recordType: recordType,
-                                     downloadAction: { (record) in
-                                        records += 1
-                                        if records > 1 {
-                                            self.writeString(fileHandle: fileHandle, string: ",\n")
-                                        }
-                                        self.writeString(fileHandle: fileHandle, string: "     \(elementName) : ")
-                                        if !self.writeRecord(fileHandle: fileHandle, elementName: elementName, record: record) {
-                                            errorMessage = "Error writing record"
-                                            recordsWrittenOk = false
-                                        }
-            },
-                                     completeAction: {
-                                        self.writeString(fileHandle: fileHandle, string: "\n     }")
-                                        self.writeString(fileHandle: fileHandle, string: "\n}")
-                                        fileHandle.closeFile()
-                                        ok = recordsWrittenOk
-                                        self.errors = self.errors || !ok
-                                        Utility.mainThread {
-                                            self.tableView.beginUpdates()
-                                            self.results[self.results.count - 1].message = (ok ? "Successfully backed up \(records) \(recordType)" : ( errorMessage != "" ? errorMessage : "Unexpected error"))
-                                            self.tableView.reloadData(forRowIndexes: IndexSet(integer: self.results.count - 1), columnIndexes: IndexSet(integer: 1))
-                                            self.tableView.endUpdates()
-                                        }   
-                                        self.backupNext()                                        
-            },
-                                     failureAction: { (message) in
-                                        fileHandle.closeFile()
-                                        errorMessage = "Error downloading table (\(message))"
-            })
-        } else {
-            errorMessage = "Error creating backup file"
-        }
-    }
-    
-    private func openFile(recordType: String) -> FileHandle! {
-        var fileHandle: FileHandle!
-        
-        let dirUrl:NSURL = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last! as NSURL
-        if let subDirUrl = dirUrl.appendingPathComponent("backups") {
-            let dateDirUrl = subDirUrl.appendingPathComponent(self.dateString)
-            let fileUrl =  dateDirUrl.appendingPathComponent("\(recordType).json")
-            let fileManager = FileManager()
-            do {
-                try fileManager.createDirectory(at: dateDirUrl, withIntermediateDirectories: true)
-            } catch {
-            }
-            fileManager.createFile(atPath: fileUrl.path, contents: nil)
-            fileHandle = FileHandle(forWritingAtPath: fileUrl.path)
-        }
-            
-        return fileHandle
-    }
-    
-    private func writeRecord(fileHandle: FileHandle, elementName: String, record: CKRecord) -> Bool {
-        // Build a dictionary from the record
-        var dictionary: [String : String] = [:]
-        
-        for key in record.allKeys() {
-            let value = Utility.objectAsString(cloudObject: record, forKey: key)
-            dictionary[key] = value
-        }
-        guard let data = try? JSONSerialization.data(withJSONObject: dictionary) else {
-            // error
-            return false
-        }
-        fileHandle.write(data)
-        return true
-    }
-
-    private func writeString(fileHandle: FileHandle, string: String) {
-        let data = string.data(using: .utf8)!
-        fileHandle.write(data)
+        self.iCloud.backup(recordType: recordType, groupName: groupName, elementName: elementName, directory: ["backup", dateString], completion: completion)
     }
     
     private func setBackupMenu(title: String) {
