@@ -29,8 +29,9 @@ class MenuBar {
     }
     
     public class func checkLastBackup() {
-        let minimumGap = 60 * 60 * 24           // Don't backup more than once a day
-        let maximumGap = 60 * 60 * 24 * 7       // Backup at least once a week
+        let settings = Utility.appDelegate?.settings
+        let minimumGap = (settings?.minimumBackupIntervalDays ?? 1) * 60 * 60 * 24
+        let maximumGap = (settings?.maximumBackupIntervalDays ?? 14) * 60 * 60 * 24 * 7       // Backup at least once a week
         
         let nowInterval = Int(Date().timeIntervalSinceReferenceDate)
         let lastBackupInterval = UserDefaults.standard.integer(forKey: "backupInterval")
@@ -49,7 +50,7 @@ class MenuBar {
             
             iCloud.download(recordType: "Games",
                             keys: ["datePlayed"],
-                            sortKey: "datePlayed",
+                            sortKey: ["datePlayed"],
                             sortAscending: false,
                             resultsLimit: 1,
                             downloadAction: { (record) in
@@ -62,13 +63,17 @@ class MenuBar {
                                                 }
                                             },
                             failureAction: { (message) in
-                                
-            })
+                                                Utility.alertMessage("Error getting last game (\(message))")
+                                            })
         }
     }
     
     private class func backupNow() {
         let backup = Backup()
-        backup.backup(resetMessage: true, disableMenu: true)
+        backup.backup(resetMessage: true, disableMenu: true, endTable: { (recordType, ok, message) in
+            if !ok {
+                Utility.alertMessage(message)
+            }
+        })
     }
 }

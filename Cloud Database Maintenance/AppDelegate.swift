@@ -17,16 +17,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     public var backupMenuItem: NSMenuItem!
     private var databaseMaintenanceWindowController: NSWindowController!
     private var backupWindowController: NSWindowController!
+    private var settingsWindowController: NSWindowController!
     private var timer = Timer()
+    public var settings = Settings()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
         
          if let button = statusItem.button {
             button.image = NSImage(named:NSImage.Name("spade"))
         }
         constructMenu()
-        runPeriodically(every: 60 * 60) // Every hour
+        
+        // Load settings
+        settings.load()
+        
+        // Run periodically if selected
+        if (self.settings.backupAutomatically ?? true) {
+            runPeriodically(every: 60 * 60 * (settings.wakeupIntervalHours ?? 6))
+        }
     }
     
     func runPeriodically(every timeInterval: Int) {
@@ -53,21 +61,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.backupDateMenuItem.isEnabled = false
         menu.addItem(NSMenuItem.separator())
         self.backupMenuItem = menu.addItem(withTitle: "Backup database", action: #selector(AppDelegate.backup(_:)), keyEquivalent: "B")
-        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "M")
+        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "")
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(withTitle: "Settings", action: #selector(AppDelegate.settings(_:)), keyEquivalent: "")
         // menu.addItem(NSMenuItem.separator())
-        // menu.addItem(withTitle: "Backup if needed", action: #selector(AppDelegate.conditionalBackup(_:)), keyEquivalent: "C")
-        // menu.addItem(withTitle: "Reset backup date", action: #selector(AppDelegate.setLastBackupDate(_:)), keyEquivalent: "R")
+        // menu.addItem(withTitle: "Backup if needed", action: #selector(AppDelegate.conditionalBackup(_:)), keyEquivalent: "")
+        // menu.addItem(withTitle: "Reset backup date", action: #selector(AppDelegate.setLastBackupDate(_:)), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         statusItem.menu = menu
     }
 
     @objc func backup(_ sender: Any?) {
-        backupWindowController = self.showMenubarWindow(menubarWindowController: backupWindowController, windowIdentifier: "BackupWindow")
+        backupWindowController = self.showMenubarWindow(menubarWindowController: self.backupWindowController, windowIdentifier: "BackupWindow")
     }
     
     @objc func maintenance(_ sender: Any?) {
         databaseMaintenanceWindowController = self.showMenubarWindow(menubarWindowController: self.databaseMaintenanceWindowController, windowIdentifier: "MaintenanceWindow")
+    }
+    
+    @objc func settings(_ sender: Any?) {
+        settingsWindowController = self.showMenubarWindow(menubarWindowController: self.settingsWindowController, windowIdentifier: "SettingsWindow")
     }
     
     @objc func conditionalBackup(_ sender: Any?) {
@@ -94,6 +108,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         returnedWindowController.window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         return returnedWindowController
+    }
+    
+    func registerDefaults() {
+        UserDefaults.standard.register(defaults: [
+            "backupAutomatically":          true,
+            "wakeupIntervalHours":          6,
+            "minimumBackupIntervalDays":    1,
+            "maximumBackupIntervalDays":    14,
+         ])
     }
     
     // MARK: - Core Data stack

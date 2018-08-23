@@ -319,5 +319,40 @@ class Utility {
         // Execute the query
         publicDatabase.add(queryOperation)
     }
+    
+    // MARK: - Alert Routines ======================================================================== -
+    
+    public class func alertMessage(_ message: String, title: String = "Warning", buttonText: String = "OK", okHandler: (() -> ())? = nil) {
+        
+        let alert = NSAlert()
+        if title != "" {
+            alert.messageText = "\(title)\n\n\(message)"
+        } else {
+            alert.messageText = message
+        }
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: buttonText)
+        alert.runModal()
+        okHandler?()
+    }
+    
+    public class func alertDecision(_ message: String, title: String = "Warning", okButtonText: String = "OK", okHandler: (() -> ())? = nil, otherButtonText: String? = nil, otherHandler: (() -> ())? = nil, cancelButtonText: String = "Cancel", cancelHandler: (() -> ())? = nil) {
+        let alert = NSAlert()
+        alert.messageText = message
+        alert.informativeText = title
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: okButtonText)
+        alert.addButton(withTitle: cancelButtonText)
+        if otherButtonText != nil {
+            alert.addButton(withTitle: otherButtonText!)
+            switch alert.runModal() {
+            case .alertFirstButtonReturn:
+                okHandler?()
+            case .alertSecondButtonReturn:
+                cancelHandler?()
+            default:
+                otherHandler?()
+            }
+        }
+    }
 }
-

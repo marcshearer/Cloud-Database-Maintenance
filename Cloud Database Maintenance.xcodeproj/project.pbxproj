@@ -10,6 +10,8 @@
 		B221EEF7210C471300F7FBA0 /* TableViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEF6210C471300F7FBA0 /* TableViewer.swift */; };
 		B221EEF9210C514A00F7FBA0 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEF8210C514A00F7FBA0 /* MenuBar.swift */; };
 		B221EEFB210C5F2300F7FBA0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEFA210C5F2300F7FBA0 /* Backup.swift */; };
+		B221EEFD210DEFBB00F7FBA0 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */; };
+		B221EEFF210DF3C100F7FBA0 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEFE210DF3C100F7FBA0 /* Settings.swift */; };
 		B2347AB821048484001F3E42 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347AB721048484001F3E42 /* MaintenanceViewController.swift */; };
 		B2347ABA210484B4001F3E42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347AB9210484B4001F3E42 /* AppDelegate.swift */; };
 		B2347ABC21048761001F3E42 /* iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347ABB21048761001F3E42 /* iCloud.swift */; };
@@ -46,6 +48,8 @@
 		B221EEF6210C471300F7FBA0 /* TableViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewer.swift; sourceTree = "<group>"; };
 		B221EEF8210C514A00F7FBA0 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		B221EEFA210C5F2300F7FBA0 /* Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
+		B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		B221EEFE210DF3C100F7FBA0 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		B2347AB721048484001F3E42 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		B2347AB9210484B4001F3E42 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2347ABB21048761001F3E42 /* iCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloud.swift; sourceTree = "<group>"; };
@@ -129,6 +133,8 @@
 				B221EEF6210C471300F7FBA0 /* TableViewer.swift */,
 				B2574FE52104942500C3FE40 /* BackupViewController.swift */,
 				B221EEFA210C5F2300F7FBA0 /* Backup.swift */,
+				B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */,
+				B221EEFE210DF3C100F7FBA0 /* Settings.swift */,
 				B265304721062FC400B97813 /* MenubarWindowController.swift */,
 				B221EEF8210C514A00F7FBA0 /* MenuBar.swift */,
 				B2347ABB21048761001F3E42 /* iCloud.swift */,
@@ -304,9 +310,11 @@
 			files = (
 				B2347ABA210484B4001F3E42 /* AppDelegate.swift in Sources */,
 				B284E5BD20D03B7000A6466E /* Utility.swift in Sources */,
+				B221EEFD210DEFBB00F7FBA0 /* SettingsViewController.swift in Sources */,
 				B265304921062FC400B97813 /* MenubarWindowController.swift in Sources */,
 				B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */,
 				B2347ABC21048761001F3E42 /* iCloud.swift in Sources */,
+				B221EEFF210DF3C100F7FBA0 /* Settings.swift in Sources */,
 				B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */,
 				B221EEF7210C471300F7FBA0 /* TableViewer.swift in Sources */,
 				B221EEFB210C5F2300F7FBA0 /* Backup.swift in Sources */,

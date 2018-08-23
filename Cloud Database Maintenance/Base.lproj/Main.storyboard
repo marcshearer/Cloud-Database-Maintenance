@@ -175,7 +175,7 @@
                     </connections>
                 </viewController>
             </objects>
-            <point key="canvasLocation" x="188" y="1199.5"/>
+            <point key="canvasLocation" x="188" y="1070"/>
         </scene>
         <!--Backup Window Controller-->
         <scene sceneID="56Z-GE-uUD">
@@ -197,6 +197,184 @@
                 <customObject id="KRI-jH-qHP" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1105" y="493"/>
+        </scene>
+        <!--Window Controller-->
+        <scene sceneID="avX-iM-ofE">
+            <objects>
+                <windowController storyboardIdentifier="SettingsWindow" id="2o2-fo-W0j" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="mMx-oI-6jf">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="196" y="240" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+                        <connections>
+                            <outlet property="delegate" destination="2o2-fo-W0j" id="jN3-Xh-bm6"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="ph6-MB-ofr" kind="relationship" relationship="window.shadowedContentViewController" id="pnK-z1-c4b"/>
+                    </connections>
+                </windowController>
+                <customObject id="Lsj-mH-eRd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1722" y="493"/>
+        </scene>
+        <!--Settings View Controller-->
+        <scene sceneID="YBu-Yy-Fca">
+            <objects>
+                <viewController id="ph6-MB-ofr" customClass="SettingsViewController" customModule="Cloud_Database_Maintenance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="rlS-yS-eG4">
+                        <rect key="frame" x="0.0" y="0.0" width="339" height="241"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sWQ-9U-vMS">
+                                <rect key="frame" x="16" y="100" width="202" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Frequency to wake (hours):" id="Jxi-fD-TwJ">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="SU0-ZL-udu">
+                                <rect key="frame" x="16" y="75" width="209" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minimum backup interval (days):" id="V3j-Ix-YH3">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mMs-Fx-UNB">
+                                <rect key="frame" x="16" y="50" width="202" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Maximum backup interval (days):" id="yWE-UD-GDi">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Dl-WJ-Vdp">
+                                <rect key="frame" x="224" y="70" width="96" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="p1h-bi-gyn">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="minimumBackupIntervalChanged:" target="ph6-MB-ofr" id="hDI-cJ-xmQ"/>
+                                </connections>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yY6-he-gEV">
+                                <rect key="frame" x="224" y="45" width="96" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="Jn6-UK-NDm">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="maximumBackupIntervalChanged:" target="ph6-MB-ofr" id="dcg-a6-23O"/>
+                                </connections>
+                            </textField>
+                            <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WVi-uH-nwY">
+                                <rect key="frame" x="224" y="95" width="96" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="mFO-rG-WeX">
+                                    <font key="font" metaFont="system"/>
+                                    <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                                <connections>
+                                    <action selector="wakeupIntervalChanged:" target="ph6-MB-ofr" id="tK7-ut-ikd"/>
+                                </connections>
+                            </textField>
+                            <scrollView fixedFrame="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MpE-gj-Vjk">
+                                <rect key="frame" x="13" y="156" width="315" height="80"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="Yb8-hD-a7a">
+                                    <rect key="frame" x="1" y="1" width="313" height="78"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <textView focusRingType="none" ambiguous="YES" editable="NO" selectable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="QdJ-IK-TwF">
+                                            <rect key="frame" x="0.0" y="0.0" width="313" height="84"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <size key="minSize" width="313" height="78"/>
+                                            <size key="maxSize" width="463" height="10000000"/>
+                                            <attributedString key="textStorage">
+                                                <fragment>
+                                                    <string key="content">Backup will cut in dependent on the frequency. If there has been a game since last backup a backup will take place unless the interval since the last backup is less than the minimum interval. If the time to the previous backup is more than the maximum interval a backup will take place even if there has not been a new game.</string>
+                                                    <attributes>
+                                                        <font key="NSFont" metaFont="smallSystem"/>
+                                                        <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                                    </attributes>
+                                                </fragment>
+                                            </attributedString>
+                                            <color key="insertionPointColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                        </textView>
+                                    </subviews>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="YES" id="7hs-lT-JeN">
+                                    <rect key="frame" x="-100" y="-100" width="87" height="18"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" verticalHuggingPriority="750" horizontal="NO" id="fc5-tE-h6L">
+                                    <rect key="frame" x="298" y="1" width="16" height="78"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                            </scrollView>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RrD-yB-VS7">
+                                <rect key="frame" x="259" y="-2" width="82" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="8qf-iO-bJX">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                    <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="cancelButtonPressed:" target="ph6-MB-ofr" id="YY8-pn-yhv"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0im-kE-y6i">
+                                <rect key="frame" x="193" y="-2" width="70" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="u9H-fR-nXL">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="saveButtonPressed:" target="ph6-MB-ofr" id="Tyq-MI-8Xy"/>
+                                </connections>
+                            </button>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GrZ-9p-JnF">
+                                <rect key="frame" x="16" y="126" width="224" height="18"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="check" title="Run backups automatically:" bezelStyle="regularSquare" imagePosition="right" state="on" inset="2" id="eNb-Do-k2t">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="backupAutomaticallyChanged:" target="ph6-MB-ofr" id="eKa-Jq-fjD"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                    <connections>
+                        <outlet property="backupAutomaticallyButton" destination="GrZ-9p-JnF" id="1cD-GK-c0q"/>
+                        <outlet property="maximumBackupIntervalTextField" destination="Jn6-UK-NDm" id="STW-u5-xzI"/>
+                        <outlet property="minimumBackupIntervalTextField" destination="p1h-bi-gyn" id="PEi-Sj-gWI"/>
+                        <outlet property="saveButton" destination="0im-kE-y6i" id="kti-G0-bwm"/>
+                        <outlet property="wakeupIntervalTextField" destination="mFO-rG-WeX" id="0P7-HV-BW8"/>
+                    </connections>
+                </viewController>
+                <customObject id="Uz8-r7-Jkv" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1722.5" y="910.5"/>
         </scene>
         <!--Backup View Controller-->
         <scene sceneID="kr4-cq-OCr">
@@ -283,6 +461,7 @@
                             <constraint firstAttribute="bottom" secondItem="uJ1-OI-KWD" secondAttribute="bottom" constant="4" id="Psu-u2-iqs"/>
                             <constraint firstAttribute="trailing" secondItem="uJ1-OI-KWD" secondAttribute="trailing" constant="4" id="mJC-R6-ABT"/>
                             <constraint firstItem="tpn-Xc-NFq" firstAttribute="top" secondItem="1ol-Z9-UGK" secondAttribute="top" id="quw-Pv-Ht3"/>
+                            <constraint firstItem="uJ1-OI-KWD" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="1ol-Z9-UGK" secondAttribute="leading" constant="20" symbolic="YES" id="rdm-2q-gEc"/>
                             <constraint firstItem="tpn-Xc-NFq" firstAttribute="leading" secondItem="1ol-Z9-UGK" secondAttribute="leading" id="z9g-uU-fIt"/>
                         </constraints>
                     </view>

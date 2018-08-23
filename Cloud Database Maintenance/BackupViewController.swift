@@ -51,9 +51,12 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
                                             }
                                         },
                           completion: { (ok, message) in
+                                            if !ok {
+                                                Utility.alertMessage(message)
+                                            }
                                             self.closeButton.isEnabled = true
-                                        })
-                          
+                                        }
+            )
         }
     }
     

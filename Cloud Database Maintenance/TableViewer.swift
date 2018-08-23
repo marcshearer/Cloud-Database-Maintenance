@@ -102,7 +102,7 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         
         _ = self.iCloud.download(recordType: self.current.recordType,
                                  keys: keys,
-                                 sortKey: self.current.sortKey,
+                                 sortKey: [self.current.sortKey],
                                  sortAscending: self.current.sortAscending,
                                  predicate: self.current.predicate,
                                  downloadAction: { (record) -> Void in

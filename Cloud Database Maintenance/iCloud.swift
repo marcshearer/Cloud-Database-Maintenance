@@ -19,8 +19,8 @@ class ICloud {
     
     public func download(recordType: String,
                          keys: [String]! = nil,
-                         sortKey: String! = nil,
-                         sortAscending: Bool = true,
+                         sortKey: [String]! = nil,
+                         sortAscending: Bool! = true,
                          predicate: NSPredicate = NSPredicate(value: true),
                          resultsLimit: Int! = nil,
                          downloadAction: ((CKRecord) -> ())? = nil,
@@ -42,8 +42,11 @@ class ICloud {
             // First time in - set up the query
             let query = CKQuery(recordType: recordType, predicate: predicate)
             if sortKey != nil {
-                let sortDescriptor = NSSortDescriptor(key: sortKey, ascending: sortAscending)
-                query.sortDescriptors = [sortDescriptor]
+                var sortDescriptor: [NSSortDescriptor] = []
+                for sortKeyElement in sortKey {
+                    sortDescriptor.append(NSSortDescriptor(key: sortKeyElement, ascending: sortAscending ?? true))
+                }
+                query.sortDescriptors = sortDescriptor
             }
             queryOperation = CKQueryOperation(query: query)
         } else {
@@ -61,7 +64,7 @@ class ICloud {
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
             if error != nil {
-                failureAction?("Unable to fetch records from \(recordType) - \(error.debugDescription)")
+                failureAction?("Unable to fetch records for \(recordType) - \(error?.localizedDescription ?? "")")
                 return
             }
             
@@ -86,7 +89,7 @@ class ICloud {
         publicDatabase.add(queryOperation)
     }
     
-    public func backup(recordType: String, groupName: String, elementName: String, directory: [String], completion: @escaping (Bool, String)->()) {
+    public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: [String], completion: @escaping (Bool, String)->()) {
         var records = 0
         var errorMessage = ""
         var ok = true
@@ -95,6 +98,8 @@ class ICloud {
         if let fileHandle = openFile(directory: directory, recordType: recordType) {
             self.writeString(fileHandle: fileHandle, string: "{ \(groupName) : {\n")
             _ = self.download(recordType: recordType,
+                              sortKey: sortKey,
+                              sortAscending: sortAscending,
                                 downloadAction: { (record) in
                                     records += 1
                                     if records > 1 {
@@ -114,10 +119,11 @@ class ICloud {
             },
                                 failureAction: { (message) in
                                     fileHandle.closeFile()
-                                    errorMessage = "Error downloading table (\(message))"
+                                    errorMessage = "Error downloading \(recordType) (\(message))"
+                                    completion(false, errorMessage)
             })
         } else {
-            errorMessage = "Error creating backup file"
+            completion(false, "Error creating backup file")
         }
     }
     
