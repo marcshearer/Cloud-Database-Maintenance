@@ -30,9 +30,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         dummyMenu()
         
-        // Load settings
-        settings.load()
-        
         // Check which database we are connected to
         let iCloud = ICloud()
         iCloud.getDatabaseIdentifier { (success, errorMessage, database) in
@@ -40,8 +37,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if success {
                 Utility.mainThread {
                     
+                    // Store database identifier
                     self.database = database!
+                    
+                    // Load settings
+                    self.settings.load()
+                    
+                    // Build proper menu
                     self.constructMenu()
+                    
+                    // Update menu bar image
                     if let button = self.statusItem.button {
                         if self.database == "production" {
                             button.image = NSImage(named:NSImage.Name("spade"))
