@@ -173,7 +173,7 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
             headerCell.alignment = column.alignment
             tableColumn.headerCell = headerCell
             if column.width < 0 && tableColumn.headerCell.cellSize.width > abs(column.width) {
-                tableColumn.width = tableColumn.headerCell.cellSize.width
+                tableColumn.width = tableColumn.headerCell.cellSize.width + 10
             } else {
                 tableColumn.width = abs(column.width)
             }
