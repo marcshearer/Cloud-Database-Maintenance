@@ -143,9 +143,12 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                                     
         },
                                  failureAction: { (message) -> Void in
-                                    self.current = nil
-                                    self.pending = nil
-                                    self.setBusy(false)
+                                    Utility.mainThread {
+                                        Utility.alertMessage(message)
+                                        self.current = nil
+                                        self.pending = nil
+                                        self.setBusy(false)
+                                    }
         })
     }
     
@@ -243,6 +246,8 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                 return object as! String
             case .date:
                 return Utility.dateString((object as! Date))
+            case .dateTime:
+                return Utility.dateString((object as! Date), format: "dd/MM/yyyy HH:mm:ss.ff")
             case .int:
                 return "\(object)"
             case .double:

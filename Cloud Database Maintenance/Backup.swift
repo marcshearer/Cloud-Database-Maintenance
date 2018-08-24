@@ -12,6 +12,7 @@ class Backup {
     
     private let iCloud = ICloud()
     private var dateString = ""
+    private var database = "unknown"
     private var tables: [(recordType: String, groupName: String, elementName: String, sortKey: [String]?, sortAscending: Bool?)] = []
     private var errors = false
     
@@ -28,12 +29,24 @@ class Backup {
         self.addTable(recordType: "Invites", groupName: "invites", elementName:  "invite")
         self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
         self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
-        self.backupNext(count: 0,
-                        resetMessage: resetMessage,
-                        disableMenu: disableMenu,
-                        startTable: startTable,
-                        endTable: endTable,
-                        completion: completion)
+        
+        iCloud.getDatabaseIdentifier { (success, errorMessage, database) in
+        
+            if !success {
+                MenuBar.setBackupTitle(title: "Backup failed (Database)", enabled: true)
+                
+            } else {
+                
+                self.database = database!
+                
+                self.backupNext(count: 0,
+                            resetMessage: resetMessage,
+                            disableMenu: disableMenu,
+                            startTable: startTable,
+                            endTable: endTable,
+                            completion: completion)
+            }
+        }
     }
     
     private func backupNext(count: Int, resetMessage: Bool, disableMenu: Bool = false, startTable: ((String)->())?, endTable: ((String, Bool, String)->())?, completion: ((Bool, String)->())?) {
@@ -41,7 +54,7 @@ class Backup {
             // Finished
             Utility.mainThread {
                 if !self.errors {
-                    MenuBar.setBackupDate(backupDate: Date())
+                    MenuBar.setBackupDate(backupDate: Date(), database: self.database)
                 }
                 let message = "Backup complete\((self.errors ? " with errors" : ""))"
                 MenuBar.setBackupTitle(title: (resetMessage ? "Backup Database" : message),
@@ -74,7 +87,7 @@ class Backup {
     
     private func backupTable(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, completion: @escaping (Bool, String)->()) {
         
-        self.iCloud.backup(recordType: recordType, groupName: groupName, elementName: elementName, sortKey: sortKey, sortAscending: sortAscending, directory: ["backups", dateString], completion: completion)
+        self.iCloud.backup(recordType: recordType, groupName: groupName, elementName: elementName, sortKey: sortKey, sortAscending: sortAscending, directory: ["backups", database, dateString], completion: completion)
     }
 }
 

@@ -127,6 +127,21 @@ class ICloud {
         }
     }
     
+    public func getDatabaseIdentifier(completion: @escaping (Bool, String?, String?)->()) {
+        var database: String!
+        
+        _ = self.download(recordType: "Version",
+                          downloadAction: { (record) in
+                                database = Utility.objectString(cloudObject: record, forKey: "database")
+                          },
+                          completeAction: {
+                                completion(true, nil, database)
+                          },
+                          failureAction: { (message) in
+                                completion(false, message, nil)
+                          })
+    }
+    
     private func openFile(directory: [String], recordType: String) -> FileHandle! {
         var fileHandle: FileHandle!
         
