@@ -21,6 +21,12 @@ class SettingsViewController: NSViewController {
     
     @IBAction func backupAutomaticallyChanged(_ sender: NSButton) {
         self.editSettings.backupAutomatically = (self.backupAutomaticallyButton.intValue != 0)
+        if self.editSettings.backupAutomatically {
+            self.editSettings.wakeupIntervalHours = 1
+            self.editSettings.minimumBackupIntervalDays = 1
+            self.editSettings.maximumBackupIntervalDays = 14
+            self.reflectValues()
+        }
         self.checkValues()
     }
     
@@ -35,7 +41,7 @@ class SettingsViewController: NSViewController {
     }
     
     @IBAction func maximumBackupIntervalChanged(_ sender: NSTextField) {
-        self.editSettings.maximumBackupIntervalDays = Int(self.maximumBackupIntervalTextField.intValue)
+       self.editSettings.maximumBackupIntervalDays = Int(self.maximumBackupIntervalTextField.intValue)
         self.checkValues()
     }
 
@@ -58,6 +64,12 @@ class SettingsViewController: NSViewController {
     override func viewDidAppear() {
         super.viewDidLoad()
         
+        self.view.window?.title = "Backup Settings (\(Utility.appDelegate!.database))"
+        
+        minimumBackupIntervalTextField.formatter = IntegerValueFormatter(maxValue: 7)
+        minimumBackupIntervalTextField.formatter = IntegerValueFormatter(maxValue: 365)
+        wakeupIntervalTextField.formatter = IntegerValueFormatter(maxValue: 24)
+        
         if firstTime {
             self.editSettings = Utility.appDelegate?.settings.copy() as! Settings
             self.reflectValues()
@@ -79,8 +91,8 @@ class SettingsViewController: NSViewController {
             self.reflectValues()
             self.saveButton.isEnabled = true
         } else {
-            if self.editSettings.wakeupIntervalHours <= 0 ||
-                    self.editSettings.minimumBackupIntervalDays <= 0 ||
+            if self.editSettings.wakeupIntervalHours < 1 ||
+                    self.editSettings.minimumBackupIntervalDays < 1 ||
                     self.editSettings.maximumBackupIntervalDays < self.editSettings.minimumBackupIntervalDays {
                 self.saveButton.isEnabled = false
             } else {
@@ -96,4 +108,41 @@ class SettingsViewController: NSViewController {
         self.maximumBackupIntervalTextField.intValue = Int32(self.editSettings.maximumBackupIntervalDays)
     }
     
+}
+
+class IntegerValueFormatter: NumberFormatter {
+    
+    var maxValue: Int!
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init()
+    }
+    
+    init(maxValue: Int?) {
+        super.init()
+        self.maxValue = maxValue
+    }
+    
+    override func isPartialStringValid(_ partialString: String, newEditingString newString: AutoreleasingUnsafeMutablePointer<NSString?>?, errorDescription error: AutoreleasingUnsafeMutablePointer<NSString?>?) -> Bool {
+        
+        if partialString.isEmpty {
+            return true
+        }
+
+        if let enteredValue = Int(partialString) {
+            
+            if let maxValue = self.maxValue {
+                if enteredValue > maxValue {
+                    return false
+                }
+            }
+            
+            return true
+            
+        } else {
+
+            return false
+        }
+        
+    }
 }

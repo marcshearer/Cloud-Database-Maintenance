@@ -54,7 +54,7 @@ class Utility {
     public static var isDevelopment: Bool {
         get {
             if _isDevelopment == nil {
-                _isDevelopment = (UserDefaults.standard.string(forKey: "database") == "development")
+                _isDevelopment = (Parameters.string(forKey: "database") == "development")
             }
             return _isDevelopment
         }

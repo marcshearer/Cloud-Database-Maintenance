@@ -97,7 +97,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.autoenablesItems = false
         
-        let lastBackup = UserDefaults.standard.string(forKey: "\(self.database)backupDate") ?? "No previous backup"
+        let lastBackup = Parameters.string(forKey: "backupDate") ?? "No previous backup"
         self.backupTitleMenuItem = menu.addItem(withTitle: "Last backup (\(self.database))", action: nil, keyEquivalent: "")
         self.backupTitleMenuItem.isEnabled = false
         self.backupDateMenuItem = menu.addItem(withTitle: lastBackup, action: nil, keyEquivalent: "")

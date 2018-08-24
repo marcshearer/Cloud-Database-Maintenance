@@ -21,8 +21,8 @@ class MenuBar {
         // Save string and interval versions of date
         let backupDateString = Utility.dateString(backupDate, format: "EEEE dd MMMM YYYY HH:mm", localized: true)
         let backupDateInterval = Int(backupDate.timeIntervalSinceReferenceDate)
-        UserDefaults.standard.set(backupDateString, forKey: "\(Utility.appDelegate!.database)BackupDate")
-        UserDefaults.standard.set(backupDateInterval, forKey: "\(Utility.appDelegate!.database)BackupInterval")
+        Parameters.set(backupDateString, forKey: "backupDate")
+        Parameters.set(backupDateInterval, forKey: "backupInterval")
         
         Utility.appDelegate?.backupDateMenuItem.title = backupDateString
     }
@@ -33,7 +33,7 @@ class MenuBar {
         let maximumGap = (settings?.maximumBackupIntervalDays ?? 14) * 60 * 60 * 24 * 7       // Backup at least once a week
         
         let nowInterval = Int(Date().timeIntervalSinceReferenceDate)
-        let lastBackupInterval = UserDefaults.standard.integer(forKey: "backupInterval")
+        let lastBackupInterval = Parameters.integer(forKey: "backupInterval")
         
         if (nowInterval - lastBackupInterval) < minimumGap {
             // Have a backup less than the minimum gap old

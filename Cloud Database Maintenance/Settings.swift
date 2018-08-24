@@ -27,17 +27,17 @@ class Settings: NSObject, NSCopying {
     }
     
     public func load() {
-        self.backupAutomatically = UserDefaults.standard.bool(forKey: "backupAutomatically")
-        self.wakeupIntervalHours = UserDefaults.standard.integer(forKey: "wakeupIntervalHours")
-        self.minimumBackupIntervalDays = UserDefaults.standard.integer(forKey: "minimumBackupIntervalDays")
-        self.maximumBackupIntervalDays = UserDefaults.standard.integer(forKey: "maximumBackupIntervalDays")
+        self.backupAutomatically = Parameters.bool(forKey: "backupAutomatically")
+        self.wakeupIntervalHours = Parameters.integer(forKey: "wakeupIntervalHours")
+        self.minimumBackupIntervalDays = Parameters.integer(forKey: "minimumBackupIntervalDays")
+        self.maximumBackupIntervalDays = Parameters.integer(forKey: "maximumBackupIntervalDays")
     }
     
     public func save() {
-        UserDefaults.standard.set(self.backupAutomatically, forKey: "backupAutomatically")
-        UserDefaults.standard.set(self.wakeupIntervalHours, forKey: "wakeupIntervalHours")
-        UserDefaults.standard.set(self.minimumBackupIntervalDays, forKey: "minimumBackupIntervalDays")
-        UserDefaults.standard.set(self.maximumBackupIntervalDays, forKey: "maximumBackupIntervalDays")
+        Parameters.set(self.backupAutomatically, forKey: "backupAutomatically")
+        Parameters.set(self.wakeupIntervalHours, forKey: "wakeupIntervalHours")
+        Parameters.set(self.minimumBackupIntervalDays, forKey: "minimumBackupIntervalDays")
+        Parameters.set(self.maximumBackupIntervalDays, forKey: "maximumBackupIntervalDays")
     }
     
     public func copy(with zone: NSZone? = nil) -> Any {

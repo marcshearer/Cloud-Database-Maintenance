@@ -15,6 +15,7 @@
 		B2347AB821048484001F3E42 /* MaintenanceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347AB721048484001F3E42 /* MaintenanceViewController.swift */; };
 		B2347ABA210484B4001F3E42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347AB9210484B4001F3E42 /* AppDelegate.swift */; };
 		B2347ABC21048761001F3E42 /* iCloud.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2347ABB21048761001F3E42 /* iCloud.swift */; };
+		B23EF1F1213039A200BFC0CA /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B23EF1F0213039A200BFC0CA /* Parameters.swift */; };
 		B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2574FE52104942500C3FE40 /* BackupViewController.swift */; };
 		B2574FEC21061E8C00C3FE40 /* Notes.txt in Resources */ = {isa = PBXBuildFile; fileRef = B2574FEB21061E8C00C3FE40 /* Notes.txt */; };
 		B265304921062FC400B97813 /* MenubarWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B265304721062FC400B97813 /* MenubarWindowController.swift */; };
@@ -53,6 +54,7 @@
 		B2347AB721048484001F3E42 /* MaintenanceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MaintenanceViewController.swift; sourceTree = "<group>"; };
 		B2347AB9210484B4001F3E42 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B2347ABB21048761001F3E42 /* iCloud.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iCloud.swift; sourceTree = "<group>"; };
+		B23EF1F0213039A200BFC0CA /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B2574FE52104942500C3FE40 /* BackupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupViewController.swift; sourceTree = "<group>"; };
 		B2574FEB21061E8C00C3FE40 /* Notes.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Notes.txt; sourceTree = "<group>"; };
 		B265304721062FC400B97813 /* MenubarWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenubarWindowController.swift; sourceTree = "<group>"; };
@@ -139,6 +141,7 @@
 				B221EEF8210C514A00F7FBA0 /* MenuBar.swift */,
 				B2347ABB21048761001F3E42 /* iCloud.swift */,
 				B284E5BC20D03B7000A6466E /* Utility.swift */,
+				B23EF1F0213039A200BFC0CA /* Parameters.swift */,
 			);
 			path = "Cloud Database Maintenance";
 			sourceTree = "<group>";
@@ -310,6 +313,7 @@
 			files = (
 				B2347ABA210484B4001F3E42 /* AppDelegate.swift in Sources */,
 				B284E5BD20D03B7000A6466E /* Utility.swift in Sources */,
+				B23EF1F1213039A200BFC0CA /* Parameters.swift in Sources */,
 				B221EEFD210DEFBB00F7FBA0 /* SettingsViewController.swift in Sources */,
 				B265304921062FC400B97813 /* MenubarWindowController.swift in Sources */,
 				B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */,
