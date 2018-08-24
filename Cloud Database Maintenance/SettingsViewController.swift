@@ -43,6 +43,10 @@ class SettingsViewController: NSViewController {
         Utility.appDelegate?.settings = self.editSettings.copy() as! Settings
         Utility.appDelegate?.settings.save()
         self.view.window?.close()
+        Utility.appDelegate?.clearTimer()
+        if (Utility.appDelegate?.settings.backupAutomatically ?? true) {
+            Utility.appDelegate?.runPeriodically(every: 60 * 60 * (Utility.appDelegate?.settings.wakeupIntervalHours ?? 6))
+        }
         firstTime = true
     }
     

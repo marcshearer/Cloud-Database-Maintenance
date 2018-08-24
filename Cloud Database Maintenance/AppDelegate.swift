@@ -18,7 +18,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var databaseMaintenanceWindowController: NSWindowController!
     private var backupWindowController: NSWindowController!
     private var settingsWindowController: NSWindowController!
-    private var timer = Timer()
+    private var timer: Timer!
     public var settings = Settings()
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -33,11 +33,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Run periodically if selected
         if (self.settings.backupAutomatically ?? true) {
-            runPeriodically(every: 60 * 60 * (settings.wakeupIntervalHours ?? 6))
+            self.runPeriodically(every: 60 * 60 * (self.settings.wakeupIntervalHours ?? 6))
         }
     }
     
+    func clearTimer() {
+        self.timer = nil
+    }
+    
     func runPeriodically(every timeInterval: Int) {
+        // Run it now
+        self.conditionalBackup(self)
+        
+        // Set it to run periodically
         self.timer = Timer.scheduledTimer(
             timeInterval: TimeInterval(timeInterval),
             target: self,
