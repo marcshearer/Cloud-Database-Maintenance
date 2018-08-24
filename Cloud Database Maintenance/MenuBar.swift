@@ -17,17 +17,13 @@ class MenuBar {
         }
     }
     
-    public class func setBackupDate(backupDate: Date, database: String! = nil) {
+    public class func setBackupDate(backupDate: Date) {
         // Save string and interval versions of date
-        var backupDateString = Utility.dateString(backupDate, format: "EEEE dd MMMM YYYY HH:mm", localized: true)
+        let backupDateString = Utility.dateString(backupDate, format: "EEEE dd MMMM YYYY HH:mm", localized: true)
         let backupDateInterval = Int(backupDate.timeIntervalSinceReferenceDate)
-        UserDefaults.standard.set(backupDateString, forKey: "backupDate")
-        UserDefaults.standard.set(backupDateInterval, forKey: "backupInterval")
+        UserDefaults.standard.set(backupDateString, forKey: "\(Utility.appDelegate!.database)BackupDate")
+        UserDefaults.standard.set(backupDateInterval, forKey: "\(Utility.appDelegate!.database)BackupInterval")
         
-        // Show on menu bar
-        if database == nil && database != "production" {
-            backupDateString += " (\(database))"
-        }
         Utility.appDelegate?.backupDateMenuItem.title = backupDateString
     }
     

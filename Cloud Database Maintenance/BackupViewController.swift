@@ -26,6 +26,7 @@ class BackupViewController: NSViewController, NSTableViewDataSource, NSTableView
         super.viewDidAppear()
         
         if self.firstTime {
+            self.view.window?.title = "Backup Cloud Database (\(Utility.appDelegate!.database))"
             tableView.beginUpdates()
             self.results = []
             tableView.reloadData()

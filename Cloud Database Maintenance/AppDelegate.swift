@@ -13,6 +13,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
     
+    private var backupTitleMenuItem: NSMenuItem!
     public var backupDateMenuItem: NSMenuItem!
     public var backupMenuItem: NSMenuItem!
     private var databaseMaintenanceWindowController: NSWindowController!
@@ -20,20 +21,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var settingsWindowController: NSWindowController!
     private var timer: Timer!
     public var settings = Settings()
+    public var database = "unknown"
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
-         if let button = statusItem.button {
-            button.image = NSImage(named:NSImage.Name("spade"))
+         if let button = self.statusItem.button {
+            button.image = NSImage(named:NSImage.Name("unknown"))
         }
-        constructMenu()
+        dummyMenu()
         
         // Load settings
         settings.load()
         
-        // Run periodically if selected
-        if (self.settings.backupAutomatically ?? true) {
-            self.runPeriodically(every: 60 * 60 * (self.settings.wakeupIntervalHours ?? 6))
+        // Check which database we are connected to
+        let iCloud = ICloud()
+        iCloud.getDatabaseIdentifier { (success, errorMessage, database) in
+            
+            if success {
+                Utility.mainThread {
+                    
+                    self.database = database!
+                    self.constructMenu()
+                    if let button = self.statusItem.button {
+                        if self.database == "production" {
+                            button.image = NSImage(named:NSImage.Name("spade"))
+                        } else {
+                            button.image = NSImage(named:NSImage.Name("unknown"))
+                        }
+                    }
+                    
+                    // Run periodically if selected
+                    if (self.settings.backupAutomatically ?? true) {
+                        self.runPeriodically(every: 60 * 60 * (self.settings.wakeupIntervalHours ?? 6))
+                    }
+                }
+            } else {
+                self.backupTitleMenuItem.title = "Failed to access database"
+            }
         }
     }
     
@@ -58,13 +82,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Insert code here to tear down your application
     }
     
+    func dummyMenu() {
+        // Initial menu while ascertaining which database we are connecting to
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        
+        self.backupTitleMenuItem = menu.addItem(withTitle: "Getting database...", action: nil, keyEquivalent: "")
+        self.backupTitleMenuItem.isEnabled = false
+        
+        statusItem.menu = menu
+    }
+    
     func constructMenu() {
         let menu = NSMenu()
         menu.autoenablesItems = false
         
-        let lastBackup = UserDefaults.standard.string(forKey: "backupDate") ?? "No previous backup"
-        let backupTitleMenuItem = menu.addItem(withTitle: "Last backup", action: nil, keyEquivalent: "")
-        backupTitleMenuItem.isEnabled = false
+        let lastBackup = UserDefaults.standard.string(forKey: "\(self.database)backupDate") ?? "No previous backup"
+        self.backupTitleMenuItem = menu.addItem(withTitle: "Last backup (\(self.database))", action: nil, keyEquivalent: "")
+        self.backupTitleMenuItem.isEnabled = false
         self.backupDateMenuItem = menu.addItem(withTitle: lastBackup, action: nil, keyEquivalent: "")
         self.backupDateMenuItem.isEnabled = false
         menu.addItem(NSMenuItem.separator())

@@ -44,6 +44,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.window?.title = "Cloud Database Maintenance (\(Utility.appDelegate!.database))"
         self.tableList.delegate = self
         self.tableList.dataSource = self
         self.setupTableList()
