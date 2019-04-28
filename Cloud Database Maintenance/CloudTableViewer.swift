@@ -49,6 +49,10 @@ private class CloudTableViewerRequest {
 
 class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     
+    public var dateFormat = "dd/MM/yyyy"
+    public var dateTimeFormat = "dd/MM/yyyy HH:mm:ss.ff"
+    public var doubleFormat = "%.2f"
+
     private var current: CloudTableViewerRequest!
     private var pending: CloudTableViewerRequest!
     private var busy = false
@@ -283,13 +287,13 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
             case .string:
                 return object as! String
             case .date:
-                return Utility.dateString((object as! Date))
+                return Utility.dateString((object as! Date), format: self.dateFormat)
             case .dateTime:
-                return Utility.dateString((object as! Date), format: "dd/MM/yyyy HH:mm:ss.ff")
+                return Utility.dateString((object as! Date), format: self.dateTimeFormat)
             case .int:
                 return "\(object)"
             case .double:
-                return "\(object)"
+                return String(format: doubleFormat, object as! Double)
             case .bool:
                 return (object as! Bool == true ? "X" : "")
             }
