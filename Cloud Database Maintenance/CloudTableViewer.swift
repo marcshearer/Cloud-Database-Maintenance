@@ -33,7 +33,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     private var pending: CloudTableViewerRequest!
     private var busy = false
     private let displayTableView: NSTableView
-    private var recordList: [CKRecord] = []
+    private var records: [CKRecord] = []
     private var layout: [Layout]!
     private var total: [Int?]!
     private var totals = false
@@ -86,10 +86,10 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     private func showCurrent() {
         
         // Remove all rows
-        if self.recordList.count != 0 {
+        if self.records.count != 0 {
             displayTableView.beginUpdates()
-            displayTableView.removeRows(at: IndexSet(integersIn: 0...self.recordList.count-1), withAnimation: NSTableView.AnimationOptions.slideUp)
-            self.recordList = []
+            displayTableView.removeRows(at: IndexSet(integersIn: 0...self.records.count-1), withAnimation: NSTableView.AnimationOptions.slideUp)
+            self.records = []
             displayTableView.reloadData()
             displayTableView.endUpdates()
         }
@@ -111,8 +111,8 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                                     Utility.mainThread {
                                         
                                         self.displayTableView.beginUpdates()
-                                        self.recordList.append(record)
-                                        self.displayTableView.insertRows(at: IndexSet(integer: self.recordList.count - 1), withAnimation: .slideUp)
+                                        self.records.append(record)
+                                        self.displayTableView.insertRows(at: IndexSet(integer: self.records.count - 1), withAnimation: .slideUp)
                                         self.displayTableView.endUpdates()
                                         
                                         for columnNumber in 0..<self.layout.count {
@@ -136,7 +136,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                                             Utility.mainThread {
                                                 self.displayTableView.beginUpdates()
                                                 self.additional = 1
-                                                self.displayTableView.insertRows(at: IndexSet(integer: self.recordList.count), withAnimation: .slideUp)
+                                                self.displayTableView.insertRows(at: IndexSet(integer: self.records.count), withAnimation: .slideUp)
                                                 self.displayTableView.endUpdates()
                                             }
                                         }
@@ -191,14 +191,14 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {
-        return self.recordList.count + additional
+        return self.records.count + additional
     }
     
     internal func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
         var result: Bool?
         
-        if row < self.recordList.count {
-            result = self.delegate?.shouldSelect(recordType: self.current.recordType, record: self.recordList[row])
+        if row < self.records.count {
+            result = self.delegate?.shouldSelect(recordType: self.current.recordType, record: self.records[row])
         }
         
         if result != nil {
@@ -218,7 +218,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         if let identifier = tableColumn?.identifier.rawValue {
             if let columnNumber = Int(identifier) {
                 let column = layout[columnNumber]
-                if row >= self.recordList.count {
+                if row >= self.records.count {
                     // Total line
                     if self.total[columnNumber] == nil {
                         // Not totalled column
@@ -231,9 +231,9 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                     // Normal line
                     var value: String
                     if column.key.left(1) == "=" {
-                        value = delegate?.derivedKey(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: recordList[row]) ?? ""
+                        value = delegate?.derivedKey(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: records[row]) ?? ""
                     } else {
-                        value = getValue(record: recordList[row], key: column.key, type: column.type)
+                        value = getValue(record: records[row], key: column.key, type: column.type)
                     }
                     cell = NSCell(textCell: value)
                 }
