@@ -27,7 +27,7 @@ struct Layout {
     var total: Bool
 }
 
-class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, TableViewerDelegate {
+class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, CloudTableViewerDelegate {
     
     private var playersLayout: [Layout]!
     private var gamesLayout: [Layout]!
@@ -35,7 +35,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     private var invitesLayout: [Layout]!
     private var notificationsLayout: [Layout]!
     private var versionLayout: [Layout]!
-    private var tableViewer: TableViewer!
+    private var tableViewer: CloudTableViewer!
     private var firstTime = true
 
     @IBOutlet weak var tableList: NSTableView!
@@ -49,7 +49,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         self.setupTableList()
         self.setupLayouts()
         
-        self.tableViewer = TableViewer(displayTableView: self.tableView)
+        self.tableViewer = CloudTableViewer(displayTableView: self.tableView)
         self.tableViewer.delegate = self
     }
     

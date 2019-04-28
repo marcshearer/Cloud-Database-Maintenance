@@ -9,7 +9,7 @@
 import Cocoa
 import CloudKit
 
-public protocol TableViewerDelegate : class {
+public protocol CloudTableViewerDelegate : class {
     
     func status(isBusy: Bool)
     
@@ -17,7 +17,7 @@ public protocol TableViewerDelegate : class {
     
 }
 
-private class TableViewerRequest {
+private class CloudTableViewerRequest {
     public var recordType: String!
     public var layout: [Layout]!
     public var sortKey: String!
@@ -25,10 +25,10 @@ private class TableViewerRequest {
     public var predicate: NSPredicate!
 }
 
-class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
+class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     
-    private var current: TableViewerRequest!
-    private var pending: TableViewerRequest!
+    private var current: CloudTableViewerRequest!
+    private var pending: CloudTableViewerRequest!
     private var busy = false
     private let displayTableView: NSTableView
     private var recordList: [CKRecord] = []
@@ -38,7 +38,7 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     private var additional = 0
     private let iCloud = ICloud()
     
-    public var delegate: TableViewerDelegate?
+    public var delegate: CloudTableViewerDelegate?
     
     override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         return true
@@ -57,15 +57,15 @@ class TableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     }
     
     public func show(recordType: String, layout: [Layout], sortKey: String = "", sortAscending: Bool = true, predicate: NSPredicate? = nil) {
-        var useTableViewerRequest: TableViewerRequest
+        var useTableViewerRequest: CloudTableViewerRequest
         
         if self.busy {
             // Request in progress - queue this one and try to cancel it
-            self.pending = TableViewerRequest()
+            self.pending = CloudTableViewerRequest()
             self.iCloud.cancel()
             useTableViewerRequest = self.pending
         } else {
-            self.current = TableViewerRequest()
+            self.current = CloudTableViewerRequest()
             useTableViewerRequest = self.current
         }
         

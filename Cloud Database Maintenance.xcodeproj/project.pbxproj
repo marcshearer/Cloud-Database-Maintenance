@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B221EEF7210C471300F7FBA0 /* TableViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEF6210C471300F7FBA0 /* TableViewer.swift */; };
+		B221EEF7210C471300F7FBA0 /* CloudTableViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEF6210C471300F7FBA0 /* CloudTableViewer.swift */; };
 		B221EEF9210C514A00F7FBA0 /* MenuBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEF8210C514A00F7FBA0 /* MenuBar.swift */; };
 		B221EEFB210C5F2300F7FBA0 /* Backup.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEFA210C5F2300F7FBA0 /* Backup.swift */; };
 		B221EEFD210DEFBB00F7FBA0 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */; };
@@ -46,7 +46,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		B221EEF6210C471300F7FBA0 /* TableViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewer.swift; sourceTree = "<group>"; };
+		B221EEF6210C471300F7FBA0 /* CloudTableViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudTableViewer.swift; sourceTree = "<group>"; };
 		B221EEF8210C514A00F7FBA0 /* MenuBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBar.swift; sourceTree = "<group>"; };
 		B221EEFA210C5F2300F7FBA0 /* Backup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backup.swift; sourceTree = "<group>"; };
 		B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 				B284E58C20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld */,
 				B284E59120D02B7600A6466E /* Main.storyboard */,
 				B2347AB721048484001F3E42 /* MaintenanceViewController.swift */,
-				B221EEF6210C471300F7FBA0 /* TableViewer.swift */,
+				B221EEF6210C471300F7FBA0 /* CloudTableViewer.swift */,
 				B2574FE52104942500C3FE40 /* BackupViewController.swift */,
 				B221EEFA210C5F2300F7FBA0 /* Backup.swift */,
 				B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */,
@@ -320,7 +320,7 @@
 				B2347ABC21048761001F3E42 /* iCloud.swift in Sources */,
 				B221EEFF210DF3C100F7FBA0 /* Settings.swift in Sources */,
 				B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */,
-				B221EEF7210C471300F7FBA0 /* TableViewer.swift in Sources */,
+				B221EEF7210C471300F7FBA0 /* CloudTableViewer.swift in Sources */,
 				B221EEFB210C5F2300F7FBA0 /* Backup.swift in Sources */,
 				B221EEF9210C514A00F7FBA0 /* MenuBar.swift in Sources */,
 				B2347AB821048484001F3E42 /* MaintenanceViewController.swift in Sources */,
