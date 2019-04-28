@@ -26,6 +26,7 @@
 		B284E5AA20D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */; };
 		B284E5B920D035E600A6466E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B284E5B820D035E600A6466E /* CloudKit.framework */; };
 		B284E5BD20D03B7000A6466E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5BC20D03B7000A6466E /* Utility.swift */; };
+		B2BE31C72275656900963B7B /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE31C62275656900963B7B /* String Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +73,7 @@
 		B284E5AB20D02B7700A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B284E5B820D035E600A6466E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B284E5BC20D03B7000A6466E /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		B2BE31C62275656900963B7B /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +144,7 @@
 				B2347ABB21048761001F3E42 /* iCloud.swift */,
 				B284E5BC20D03B7000A6466E /* Utility.swift */,
 				B23EF1F0213039A200BFC0CA /* Parameters.swift */,
+				B2BE31C62275656900963B7B /* String Extensions.swift */,
 			);
 			path = "Cloud Database Maintenance";
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				B265304921062FC400B97813 /* MenubarWindowController.swift in Sources */,
 				B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */,
 				B2347ABC21048761001F3E42 /* iCloud.swift in Sources */,
+				B2BE31C72275656900963B7B /* String Extensions.swift in Sources */,
 				B221EEFF210DF3C100F7FBA0 /* Settings.swift in Sources */,
 				B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */,
 				B221EEF7210C471300F7FBA0 /* CloudTableViewer.swift in Sources */,

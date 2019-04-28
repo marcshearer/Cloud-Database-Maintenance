@@ -15,7 +15,7 @@ public protocol CloudTableViewerDelegate : class {
     
     func shouldSelect(recordType: String, record: CKRecord) -> Bool
     
-    func derivedKey(record: NSManagedObject, recordType: String, key: String) -> String
+    func derivedKey(recordType: String, key: String, record: CKRecord) -> String
     
 }
 
@@ -231,7 +231,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                     // Normal line
                     var value: String
                     if column.key.left(1) == "=" {
-                        value = delegate?.derivedColumn(record: recordList[row], recordType: self.recordType, key: column.key.right(column.key.length - 1)) ?? ""
+                        value = delegate?.derivedKey(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: recordList[row]) ?? ""
                     } else {
                         value = getValue(record: recordList[row], key: column.key, type: column.type)
                     }
