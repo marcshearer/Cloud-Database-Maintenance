@@ -9,24 +9,6 @@
 import Cocoa
 import CloudKit
 
-enum VarType {
-    case string
-    case date
-    case dateTime
-    case int
-    case double
-    case bool
-}
-
-struct Layout {
-    var key: String
-    var title: String
-    var width: CGFloat
-    var alignment: NSTextAlignment
-    var type: VarType
-    var total: Bool
-}
-
 class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate, CloudTableViewerDelegate {
     
     private var playersLayout: [Layout]!
@@ -75,6 +57,10 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     }
     
     internal func status(isBusy: Bool) {
+    }
+    
+    func derivedKey(recordType: String, key: String, record: CKRecord) -> String {
+        return ""
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {

@@ -6,8 +6,28 @@
 //  Copyright © 2018 Marc Shearer. All rights reserved.
 //
 
+// Note that the Table View must be cell-based (property of the Table View (in the Clip View))
+
 import Cocoa
 import CloudKit
+
+enum VarType {
+    case string
+    case date
+    case dateTime
+    case int
+    case double
+    case bool
+}
+
+struct Layout {
+    var key: String
+    var title: String
+    var width: CGFloat
+    var alignment: NSTextAlignment
+    var type: VarType
+    var total: Bool
+}
 
 public protocol CloudTableViewerDelegate : class {
     
@@ -60,6 +80,17 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     
     public func show(recordType: String, layout: [Layout], sortKey: String = "", sortAscending: Bool = true, predicate: NSPredicate? = nil) {
         var useTableViewerRequest: CloudTableViewerRequest
+        var sortKey = sortKey
+        
+        // Default sort to first non-derived column if unspecified
+        if sortKey == "" {
+            for layout in layout {
+                if layout.key.left(1) != "=" {
+                    sortKey = layout.key
+                    break
+                }
+            }
+        }
         
         if self.busy {
             // Request in progress - queue this one and try to cancel it
@@ -73,7 +104,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         
         useTableViewerRequest.recordType = recordType
         useTableViewerRequest.layout = layout
-        useTableViewerRequest.sortKey = (sortKey == "" ? layout[0].key : sortKey)
+        useTableViewerRequest.sortKey = sortKey
         useTableViewerRequest.sortAscending = sortAscending
         useTableViewerRequest.predicate = (predicate == nil ? NSPredicate(value: true) : predicate)
         
