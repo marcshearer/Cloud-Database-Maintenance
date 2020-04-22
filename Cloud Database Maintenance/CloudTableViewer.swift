@@ -59,7 +59,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     private let displayTableView: NSTableView
     private var records: [CKRecord] = []
     private var layout: [Layout]!
-    private var total: [Int?]!
+    private var total: [Double?]!
     private var totals = false
     private var additional = 0
     private let iCloud = ICloud()
@@ -259,7 +259,8 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                         // Not totalled column
                         cell = NSCell(textCell: "")
                     } else {
-                        cell = NSCell(textCell: "\(self.total[columnNumber]!)")
+                        let format = (column.type == .int ? "%d" : doubleFormat)
+                        cell = NSCell(textCell: String(format: format, self.total[columnNumber]!))
                         cell.font = NSFont.boldSystemFont(ofSize: 12)
                     }
                 } else {
@@ -302,11 +303,11 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         }
     }
     
-    private func getNumericValue(record: CKRecord, key: String, type: VarType) -> Int {
+    private func getNumericValue(record: CKRecord, key: String, type: VarType) -> Double {
         if let object = record.object(forKey: key) {
             switch type {
             case .int, .double:
-                return object as! Int
+                return object as! Double
             default:
                 return 0
             }
