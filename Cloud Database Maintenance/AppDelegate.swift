@@ -9,13 +9,25 @@
 import Cocoa
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     private let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
     
     private var backupTitleMenuItem: NSMenuItem!
     public var backupDateMenuItem: NSMenuItem!
     public var backupMenuItem: NSMenuItem!
+    public var createLinksMenuItem: NSMenuItem!
+    public var createLinksStatusMenuItem: NSMenuItem!
+    public var emailToUUIDMenuItem: NSMenuItem!
+    public var emailToUUIDStatusMenuItem: NSMenuItem!
+    public var clearPrivateSettingsMenuItem: NSMenuItem!
+    public var clearPrivateSettingsStatusMenuItem: NSMenuItem!
+    public var createReadableRecordIDsMenuItem: NSMenuItem!
+    public var createReadableRecordIDsStatusMenuItem: NSMenuItem!
+    public var checkDuplicateGamesMenuItem: NSMenuItem!
+    public var checkDuplicateGamesStatusMenuItem: NSMenuItem!
+    public var checkDuplicateParticipantsMenuItem: NSMenuItem!
+    public var checkDuplicateParticipantsStatusMenuItem: NSMenuItem!
     private var databaseMaintenanceWindowController: NSWindowController!
     private var backupWindowController: NSWindowController!
     private var settingsWindowController: NSWindowController!
@@ -101,6 +113,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func constructMenu() {
         let menu = NSMenu()
         menu.autoenablesItems = false
+        menu.delegate = self
         
         let lastBackup = Parameters.string(forKey: "backupDate") ?? "No previous backup"
         self.backupTitleMenuItem = menu.addItem(withTitle: "Last backup (\(self.database))", action: nil, keyEquivalent: "")
@@ -111,15 +124,67 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.backupMenuItem = menu.addItem(withTitle: "Backup database", action: #selector(AppDelegate.backup(_:)), keyEquivalent: "B")
         menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
+        
+        self.createLinksMenuItem = menu.addItem(withTitle: "Create links entries", action: #selector(AppDelegate.createLinks(_:)), keyEquivalent: "")
+        self.createLinksStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.createLinksStatusMenuItem.isHidden = true
+        self.createLinksStatusMenuItem.isEnabled = false
+        
+        self.emailToUUIDMenuItem = menu.addItem(withTitle: "Convert email to UUID", action: #selector(AppDelegate.confirmEmailToUUID(_:)), keyEquivalent: "")
+        self.emailToUUIDStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.emailToUUIDStatusMenuItem.isHidden = true
+        self.emailToUUIDStatusMenuItem.isEnabled = false
+        
+       self.clearPrivateSettingsMenuItem = menu.addItem(withTitle: "Clear private settings", action: #selector(AppDelegate.confirmClearPrivateSettings(_:)), keyEquivalent: "")
+        self.clearPrivateSettingsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.clearPrivateSettingsStatusMenuItem.isHidden = true
+        self.clearPrivateSettingsStatusMenuItem.isEnabled = false
+        
+        self.createReadableRecordIDsMenuItem = menu.addItem(withTitle: "Create readable record IDs", action: #selector(AppDelegate.confirmCreateReadableRecordIDs(_:)), keyEquivalent: "")
+        self.createReadableRecordIDsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.createReadableRecordIDsStatusMenuItem.isHidden = true
+        self.createReadableRecordIDsStatusMenuItem.isEnabled = false
+        
+        menu.addItem(NSMenuItem.separator())
+        
+        self.checkDuplicateGamesMenuItem = menu.addItem(withTitle: "Check duplicate games", action: #selector(AppDelegate.checkDuplicateGames(_:)), keyEquivalent: "")
+        self.checkDuplicateGamesStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.checkDuplicateGamesStatusMenuItem.isHidden = true
+        self.checkDuplicateGamesStatusMenuItem.isEnabled = false
+        
+        self.checkDuplicateParticipantsMenuItem = menu.addItem(withTitle: "Check duplicate participants", action: #selector(AppDelegate.checkDuplicateParticipants(_:)), keyEquivalent: "")
+        self.checkDuplicateParticipantsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+        self.checkDuplicateParticipantsStatusMenuItem.isHidden = true
+        self.checkDuplicateParticipantsStatusMenuItem.isEnabled = false
+
+        menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Settings", action: #selector(AppDelegate.settings(_:)), keyEquivalent: "")
-        // menu.addItem(NSMenuItem.separator())
-        // menu.addItem(withTitle: "Backup if needed", action: #selector(AppDelegate.conditionalBackup(_:)), keyEquivalent: "")
-        // menu.addItem(withTitle: "Reset backup date", action: #selector(AppDelegate.setLastBackupDate(_:)), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         statusItem.menu = menu
     }
 
+    func popupConfirm(title: String, action: Selector, cancelAction: Selector) {
+        let menu = NSMenu()
+        menu.addItem(withTitle: title, action: action, keyEquivalent: "")
+        menu.addItem(withTitle: "Cancel", action: cancelAction, keyEquivalent: "")
+        NSSound(named: NSSound.Name(rawValue: "Morse"))?.play()
+        self.statusItem.popUpMenu(menu)
+    }
+    
+    func showStatus(option: String, status: String) {
+        Utility.mainThread {
+            let menu = NSMenu()
+            menu.addItem(withTitle: "\(option) completion: \(status)", action: #selector(AppDelegate.doNothing(_:)), keyEquivalent: "")
+            NSSound(named: NSSound.Name(rawValue: "Blow"))?.play()
+            self.statusItem.popUpMenu(menu)
+        }
+    }
+    
+    @objc private func doNothing(_ sender: Any?) {
+        
+    }
+        
     @objc func backup(_ sender: Any?) {
         backupWindowController = self.showMenubarWindow(menubarWindowController: self.backupWindowController, windowIdentifier: "BackupWindow")
     }
@@ -130,6 +195,113 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @objc func settings(_ sender: Any?) {
         settingsWindowController = self.showMenubarWindow(menubarWindowController: self.settingsWindowController, windowIdentifier: "SettingsWindow")
+    }
+    
+    @objc func createLinks(_ sender: Any?) {
+        self.createLinksMenuItem.title = "Creating links..."
+        self.createLinksMenuItem.isEnabled = false
+        CreateLinks.shared.execute { message in
+            self.createLinksMenuItem.title = "Create links entries"
+            self.createLinksMenuItem.isEnabled = true
+            self.createLinksStatusMenuItem.title = "   Last status: \(message)"
+            self.createLinksStatusMenuItem.isHidden = false
+            self.showStatus(option: "Create links entries", status: message)        }
+    }
+    
+    @objc func confirmEmailToUUID(_ sender: Any?) {
+        self.popupConfirm(title: "Confirm (irreversible) convert email to UUID", action: #selector(AppDelegate.emailToUUID(_:)), cancelAction: #selector(AppDelegate.resetEmailToUUID(_:)))
+    }
+    
+    @objc func emailToUUID(_ sender: Any?) {
+        self.emailToUUIDMenuItem.title = "Converting email to UUID..."
+        self.emailToUUIDMenuItem.isEnabled = false
+        EmailToUUID.shared.execute { message in
+            self.resetEmailToUUID(message)
+        }
+    }
+    
+    @objc func resetEmailToUUID(_ sender: Any?) {
+        self.emailToUUIDMenuItem.title = "Convert email to UUID"
+        self.emailToUUIDMenuItem.isEnabled = true
+        if let message = sender as? String {
+            self.emailToUUIDStatusMenuItem.title = "   Last status: \(message)"
+            self.emailToUUIDStatusMenuItem.isHidden = false
+            self.showStatus(option: "Convert email to UUID", status: message)
+        } else {
+            self.emailToUUIDStatusMenuItem.isHidden = true
+        }
+    }
+        
+    @objc func confirmClearPrivateSettings(_ sender: Any?) {
+        self.popupConfirm(title: "Confirm (irreversible) clear private settings", action: #selector(AppDelegate.clearPrivateSettings(_:)), cancelAction: #selector(AppDelegate.resetClearPrivateSettings(_:)))
+    }
+    
+    @objc func resetClearPrivateSettings(_ sender: Any?) {
+        self.clearPrivateSettingsMenuItem.title = "Clear private settings"
+        self.clearPrivateSettingsMenuItem.isEnabled = true
+        if let message = sender as? String {
+            self.clearPrivateSettingsStatusMenuItem.title = "   Last status: \(message)"
+            self.clearPrivateSettingsStatusMenuItem.isHidden = false
+            self.showStatus(option: "Clear private settings", status: message)
+        } else {
+            self.clearPrivateSettingsStatusMenuItem.isHidden = true
+        }
+    }
+    
+   @objc func clearPrivateSettings(_ sender: Any?) {
+        self.clearPrivateSettingsMenuItem.title = "Clearing private settings..."
+        self.clearPrivateSettingsMenuItem.isEnabled = false
+        ClearPrivateSettings.shared.execute { message in
+            self.resetClearPrivateSettings(message)
+        }
+    }
+    
+    @objc func confirmCreateReadableRecordIDs(_ sender: Any?) {
+        self.popupConfirm(title: "Confirm (irreversible) create readable Record IDs", action: #selector(AppDelegate.createReadableRecordIDs(_:)), cancelAction: #selector(AppDelegate.resetCreateReadableRecordIDs(_:)))
+    }
+    
+    @objc func createReadableRecordIDs(_ sender: Any?) {
+        self.createReadableRecordIDsMenuItem.title = "Creating readable Record IDs..."
+        self.createReadableRecordIDsMenuItem.isEnabled = false
+        ReadableRecordIDs.shared.execute { message in
+            self.resetCreateReadableRecordIDs(message)
+        }
+    }
+    
+    @objc func resetCreateReadableRecordIDs(_ sender: Any?) {
+        self.createReadableRecordIDsMenuItem.title = "Create readable Record IDs"
+        self.createReadableRecordIDsMenuItem.isEnabled = true
+        if let message = sender as? String {
+            self.createReadableRecordIDsStatusMenuItem.title = "   Last status: \(message)"
+            self.createReadableRecordIDsStatusMenuItem.isHidden = false
+            self.showStatus(option: "Create readable Record IDs", status: message)
+        } else {
+            self.createReadableRecordIDsStatusMenuItem.isHidden = true
+        }
+    }
+    
+    @objc func checkDuplicateGames(_ sender: Any?) {
+        self.checkDuplicateGamesMenuItem.title = "Checking duplicate games..."
+        self.checkDuplicateGamesMenuItem.isEnabled = false
+        CheckDuplicateGames.shared.execute { message in
+            self.checkDuplicateGamesMenuItem.title = "Check duplicate games"
+            self.checkDuplicateGamesMenuItem.isEnabled = true
+            self.checkDuplicateGamesStatusMenuItem.title = "   Last status: \(message)"
+            self.checkDuplicateGamesStatusMenuItem.isHidden = false
+            self.showStatus(option: "Check duplicate games", status: message)
+        }
+    }
+    
+    @objc func checkDuplicateParticipants(_ sender: Any?) {
+        self.checkDuplicateParticipantsMenuItem.title = "Checking duplicate participants..."
+        self.checkDuplicateParticipantsMenuItem.isEnabled = false
+        CheckDuplicateParticipants.shared.execute { message in
+            self.checkDuplicateParticipantsMenuItem.title = "Check duplicate participants"
+            self.checkDuplicateParticipantsMenuItem.isEnabled = true
+            self.checkDuplicateParticipantsStatusMenuItem.title = "   Last status: \(message)"
+            self.checkDuplicateParticipantsStatusMenuItem.isHidden = false
+            self.showStatus(option: "Check duplicate participants", status: message)
+        }
     }
     
     @objc func conditionalBackup(_ sender: Any?) {
@@ -148,7 +320,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if menubarWindowController == nil {
             let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
             let menubarWindowIdentifier = NSStoryboard.SceneIdentifier(rawValue: windowIdentifier)
-            returnedWindowController = mainStoryboard.instantiateController(withIdentifier: menubarWindowIdentifier) as! NSWindowController
+            returnedWindowController = mainStoryboard.instantiateController(withIdentifier: menubarWindowIdentifier) as? NSWindowController
         } else {
             returnedWindowController = menubarWindowController
         }

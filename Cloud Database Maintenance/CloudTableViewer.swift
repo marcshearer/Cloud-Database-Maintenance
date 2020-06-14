@@ -268,7 +268,11 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                     var value: String
                     if column.key.left(1) == "=" {
                         value = delegate?.derivedKey(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: records[row]) ?? ""
-                    } else {
+                    } else if column.key == "recordID" {
+                        value = records[row].recordID.recordName
+                    }
+                    
+                    else {
                         value = getValue(record: records[row], key: column.key, type: column.type)
                     }
                     cell = NSCell(textCell: value)

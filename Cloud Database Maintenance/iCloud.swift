@@ -18,6 +18,7 @@ class ICloud {
     }
     
     public func download(recordType: String,
+                         database: CKDatabase? = nil,
                          keys: [String]! = nil,
                          sortKey: [String]! = nil,
                          sortAscending: Bool! = true,
@@ -36,8 +37,8 @@ class ICloud {
         self.cancelRequest = false
         
         // Fetch player records from cloud
-        let cloudContainer = CKContainer(identifier: "iCloud.MarcShearer.Contract-Whist-Scorecard")
-        let publicDatabase = cloudContainer.publicCloudDatabase
+        let cloudContainer = CKContainer(identifier: Config.iCloudIdentifier)
+        let publicDatabase = database ?? cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
             let query = CKQuery(recordType: recordType, predicate: predicate)
@@ -87,6 +88,100 @@ class ICloud {
         
         // Execute the query - disable
         publicDatabase.add(queryOperation)
+    }
+    
+    public func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
+        // Copes with limit being exceeed which splits the load in two and tries again
+        var lastSplit = 400
+        
+        if (recordIDsToDelete?.count ?? 0) > lastSplit {
+            // No point trying - split immediately
+            lastSplit = self.updatePortion(requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+        } else {
+            // Give it a go
+            let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+            let database = database ?? cloudContainer.publicCloudDatabase
+            
+            let uploadOperation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: recordIDsToDelete)
+            
+            uploadOperation.isAtomic = true
+            uploadOperation.database = database
+            
+            // Assign a completion handler
+            uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
+                if error != nil {
+                    if let error = error as? CKError {
+                        if error.code == .limitExceeded {
+                            // Limit exceeded - start at 400 and then split in two and try again
+                            lastSplit = self.updatePortion(requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                        } else if error.code == .partialFailure {
+                            completion?(error)
+                        } else {
+                            completion?(error)
+                        }
+                    } else {
+                        completion?(error)
+                    }
+                } else {
+                    if recordsRemainder != nil || recordIDsToDeleteRemainder != nil {
+                        // Now need to send next block of records
+                        lastSplit = self.updatePortion(requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                        
+                    } else {
+                        completion?(nil)
+                    }
+                }
+            }
+            
+            // Add the operation to an operation queue to execute it
+            OperationQueue().addOperation(uploadOperation)
+        }
+    }
+    
+    private func updatePortion(requireLess: Bool, lastSplit: Int, records: [CKRecord]?, recordIDsToDelete: [CKRecord.ID]?, recordsRemainder: [CKRecord]?, recordIDsToDeleteRemainder: [CKRecord.ID]?, completion: ((Error?)->())?) -> Int {
+        
+        // Limit exceeded - start at 400 and then split in two and try again
+
+        // Join records and remainder back together again
+        var allRecords = records ?? []
+        if recordsRemainder != nil {
+            allRecords += recordsRemainder!
+        }
+        var allRecordIDsToDelete = recordIDsToDelete ?? []
+        if recordIDsToDeleteRemainder != nil {
+            allRecordIDsToDelete += recordIDsToDeleteRemainder!
+        }
+
+        var split = lastSplit
+        let firstTime = (recordsRemainder == nil && recordIDsToDeleteRemainder == nil)
+        if requireLess {
+            if allRecords.count != 0 {
+                // Split the records
+                let half = Int((records?.count ?? 0) / 2)
+                split = (firstTime ? lastSplit : half)
+            } else {
+                // Split the record IDs to delete
+                let half = Int((recordIDsToDelete?.count ?? 0) / 2)
+                split = (firstTime ? lastSplit : half)
+            }
+        } else {
+            split = lastSplit
+        }
+        
+        // Now split at new break point
+        if allRecords.count != 0 {
+            split = min(split, allRecords.count)
+            let firstBlock = Array(allRecords.prefix(upTo: split))
+            let secondBlock = (allRecords.count <= split ? nil : Array(allRecords.suffix(from: split)))
+            self.update(records: firstBlock, recordsRemainder: secondBlock, recordIDsToDeleteRemainder: allRecordIDsToDelete, completion: completion)
+        } else {
+            split = min(split, allRecordIDsToDelete.count)
+            let firstBlock = Array(allRecordIDsToDelete.prefix(upTo: split))
+            let secondBlock = (allRecordIDsToDelete.count <= split ? nil : Array(allRecordIDsToDelete.suffix(from: split)))
+            self.update(recordIDsToDelete: firstBlock, recordIDsToDeleteRemainder: secondBlock, completion: completion)
+        }
+        
+        return split
     }
     
     public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: [String], completion: @escaping (Bool, String)->()) {
@@ -181,5 +276,17 @@ class ICloud {
     private func writeString(fileHandle: FileHandle, string: String) {
         let data = string.data(using: .utf8)!
         fileHandle.write(data)
+    }
+    
+    public func errorMessage(_ error: Error?) -> String {
+        if error == nil {
+            return "Success"
+        } else {
+            if let ckError = error as? CKError {
+                return "Error updating (\(ckError.localizedDescription))"
+            } else {
+                return "Error updating (\(error!.localizedDescription))"
+            }
+        }
     }
 }

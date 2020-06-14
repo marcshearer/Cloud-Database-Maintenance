@@ -25,7 +25,7 @@ Swift Gotchas / hints
 TableViews need to be in cell mode rather than view mode
 Data appears in users/Library/Containers/appname/...
 To make an app available archive it and then take export and take bottom option
-To switch development / product databases change the com.apple.developer.icloud-container-environment key in entitlements
+To switch development / production databases change the com.apple.developer.icloud-container-environment key in entitlements
 
 
 For good resizing on rotation call view.setNeedsLayout() from viewWillTransition and then override viewDidLayoutSubviews (see HandViewController) - NOTE - NOT viewWillLayoutSubviews - Also look at the animateAlongside approach in ScorepadViewController

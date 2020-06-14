@@ -200,6 +200,35 @@ class Utility {
         return "\(object!)"
     }
     
+    //MARK: Cloud functions - prepare image to transmit to cloud ============================================
+       
+    class func imageToObject(cloudObject: CKRecord, thumbnail: NSData?, name: String) -> Bool {
+        // Note that this will be asynchronous and hence temporary image should not be deleted until completion
+        var success = false
+        if thumbnail != nil {
+            let imageFilePath = NSTemporaryDirectory() + name
+            let imageFileURL = URL(fileURLWithPath: imageFilePath)
+            if let bits = NSImage(data: thumbnail! as Data)!.representations.first as? NSBitmapImageRep {
+                let data = bits.representation(using: .jpeg, properties: [:])
+                do {
+                    try data?.write(to: imageFileURL)
+                    // Create image asset for upload
+                    let imageAsset = CKAsset(fileURL: imageFileURL)
+                    cloudObject.setValue(imageAsset, forKey: "thumbnail")
+                    success = true
+                } catch {
+                }
+            }
+        }
+        return success
+    }
+    
+    class func tidyObject(name: String) {
+        // Called to remove temporary file after completion
+        let imageFilePath = NSTemporaryDirectory() + name
+        let imageFileURL = URL(fileURLWithPath: imageFilePath)
+        try? FileManager.default.removeItem(at: imageFileURL)
+    }
   
     //MARK: Compare version numbers =======================================================================
     
