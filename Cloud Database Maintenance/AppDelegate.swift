@@ -62,6 +62,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     if let button = self.statusItem.button {
                         if self.database == "production" {
                             button.image = NSImage(named:NSImage.Name("spade"))
+                        } else if self.database == "development" {
+                            button.image = NSImage(named:NSImage.Name("diamond"))
                         } else {
                             button.image = NSImage(named:NSImage.Name("unknown"))
                         }
@@ -168,7 +170,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let menu = NSMenu()
         menu.addItem(withTitle: title, action: action, keyEquivalent: "")
         menu.addItem(withTitle: "Cancel", action: cancelAction, keyEquivalent: "")
-        NSSound(named: NSSound.Name(rawValue: "Morse"))?.play()
+        NSSound(named: NSSound.Name(rawValue: "Submarine"))?.play()
         self.statusItem.popUpMenu(menu)
     }
     
@@ -176,7 +178,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Utility.mainThread {
             let menu = NSMenu()
             menu.addItem(withTitle: "\(option) completion: \(status)", action: #selector(AppDelegate.doNothing(_:)), keyEquivalent: "")
-            NSSound(named: NSSound.Name(rawValue: "Blow"))?.play()
+            NSSound(named: NSSound.Name(rawValue: "Frog"))?.play()
             self.statusItem.popUpMenu(menu)
         }
     }
@@ -200,12 +202,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func createLinks(_ sender: Any?) {
         self.createLinksMenuItem.title = "Creating links..."
         self.createLinksMenuItem.isEnabled = false
-        CreateLinks.shared.execute { message in
-            self.createLinksMenuItem.title = "Create links entries"
-            self.createLinksMenuItem.isEnabled = true
-            self.createLinksStatusMenuItem.title = "   Last status: \(message)"
-            self.createLinksStatusMenuItem.isHidden = false
-            self.showStatus(option: "Create links entries", status: message)        }
+        Utility.mainThread {
+            CreateLinks.shared.execute { message in
+                self.createLinksMenuItem.title = "Create links entries"
+                self.createLinksMenuItem.isEnabled = true
+                self.createLinksStatusMenuItem.title = "   Last status: \(message)"
+                self.createLinksStatusMenuItem.isHidden = false
+                self.showStatus(option: "Create links entries", status: message)
+            }
+        }
     }
     
     @objc func confirmEmailToUUID(_ sender: Any?) {
@@ -215,8 +220,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func emailToUUID(_ sender: Any?) {
         self.emailToUUIDMenuItem.title = "Converting email to UUID..."
         self.emailToUUIDMenuItem.isEnabled = false
-        EmailToUUID.shared.execute { message in
-            self.resetEmailToUUID(message)
+        Utility.mainThread {
+            EmailToUUID.shared.execute { message in
+                self.resetEmailToUUID(message)
+            }
         }
     }
     
@@ -248,11 +255,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
     }
     
-   @objc func clearPrivateSettings(_ sender: Any?) {
+    @objc func clearPrivateSettings(_ sender: Any?) {
         self.clearPrivateSettingsMenuItem.title = "Clearing private settings..."
         self.clearPrivateSettingsMenuItem.isEnabled = false
-        ClearPrivateSettings.shared.execute { message in
-            self.resetClearPrivateSettings(message)
+        Utility.mainThread {
+            ClearPrivateSettings.shared.execute { message in
+                self.resetClearPrivateSettings(message)
+            }
         }
     }
     
@@ -263,8 +272,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func createReadableRecordIDs(_ sender: Any?) {
         self.createReadableRecordIDsMenuItem.title = "Creating readable Record IDs..."
         self.createReadableRecordIDsMenuItem.isEnabled = false
-        ReadableRecordIDs.shared.execute { message in
-            self.resetCreateReadableRecordIDs(message)
+        Utility.mainThread {
+            ReadableRecordIDs.shared.execute { message in
+                self.resetCreateReadableRecordIDs(message)
+            }
         }
     }
     
@@ -283,24 +294,28 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func checkDuplicateGames(_ sender: Any?) {
         self.checkDuplicateGamesMenuItem.title = "Checking duplicate games..."
         self.checkDuplicateGamesMenuItem.isEnabled = false
-        CheckDuplicateGames.shared.execute { message in
-            self.checkDuplicateGamesMenuItem.title = "Check duplicate games"
-            self.checkDuplicateGamesMenuItem.isEnabled = true
-            self.checkDuplicateGamesStatusMenuItem.title = "   Last status: \(message)"
-            self.checkDuplicateGamesStatusMenuItem.isHidden = false
-            self.showStatus(option: "Check duplicate games", status: message)
+        Utility.mainThread {
+            CheckDuplicateGames.shared.execute { message in
+                self.checkDuplicateGamesMenuItem.title = "Check duplicate games"
+                self.checkDuplicateGamesMenuItem.isEnabled = true
+                self.checkDuplicateGamesStatusMenuItem.title = "   Last status: \(message)"
+                self.checkDuplicateGamesStatusMenuItem.isHidden = false
+                self.showStatus(option: "Check duplicate games", status: message)
+            }
         }
     }
     
     @objc func checkDuplicateParticipants(_ sender: Any?) {
         self.checkDuplicateParticipantsMenuItem.title = "Checking duplicate participants..."
         self.checkDuplicateParticipantsMenuItem.isEnabled = false
-        CheckDuplicateParticipants.shared.execute { message in
-            self.checkDuplicateParticipantsMenuItem.title = "Check duplicate participants"
-            self.checkDuplicateParticipantsMenuItem.isEnabled = true
-            self.checkDuplicateParticipantsStatusMenuItem.title = "   Last status: \(message)"
-            self.checkDuplicateParticipantsStatusMenuItem.isHidden = false
-            self.showStatus(option: "Check duplicate participants", status: message)
+        Utility.mainThread {
+            CheckDuplicateParticipants.shared.execute { message in
+                self.checkDuplicateParticipantsMenuItem.title = "Check duplicate participants"
+                self.checkDuplicateParticipantsMenuItem.isEnabled = true
+                self.checkDuplicateParticipantsStatusMenuItem.title = "   Last status: \(message)"
+                self.checkDuplicateParticipantsStatusMenuItem.isHidden = false
+                self.showStatus(option: "Check duplicate participants", status: message)
+            }
         }
     }
     

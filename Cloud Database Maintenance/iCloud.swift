@@ -32,7 +32,6 @@ class ICloud {
         
         var queryOperation: CKQueryOperation
         var rowsRead = rowsRead
-        
         // Clear cancel flag
         self.cancelRequest = false
         
@@ -56,7 +55,7 @@ class ICloud {
         }
         queryOperation.desiredKeys = keys
         queryOperation.queuePriority = .veryHigh
-        queryOperation.resultsLimit = (resultsLimit != nil ? resultsLimit : (rowsRead < 100 ? 30 : 100))
+        queryOperation.resultsLimit = (resultsLimit != nil ? resultsLimit : (rowsRead < 100 ? 20 : 100))
         queryOperation.recordFetchedBlock = { (record) -> Void in
             let cloudObject: CKRecord = record
             rowsRead += 1
@@ -72,6 +71,7 @@ class ICloud {
             if cursor != nil && !self.cancelRequest && (resultsLimit == nil || rowsRead < resultsLimit) {
                 // More to come - recurse
                 _ = self.download(recordType: recordType,
+                                  database: database,
                                   keys: keys,
                                   sortKey: sortKey,
                                   sortAscending: sortAscending,
@@ -94,9 +94,9 @@ class ICloud {
         // Copes with limit being exceeed which splits the load in two and tries again
         var lastSplit = 400
         
-        if (recordIDsToDelete?.count ?? 0) > lastSplit {
+        if (records?.count ?? 0) + (recordIDsToDelete?.count ?? 0) > lastSplit {
             // No point trying - split immediately
-            lastSplit = self.updatePortion(requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+            lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
         } else {
             // Give it a go
             let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
@@ -113,7 +113,7 @@ class ICloud {
                     if let error = error as? CKError {
                         if error.code == .limitExceeded {
                             // Limit exceeded - start at 400 and then split in two and try again
-                            lastSplit = self.updatePortion(requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                            lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
                         } else if error.code == .partialFailure {
                             completion?(error)
                         } else {
@@ -125,7 +125,7 @@ class ICloud {
                 } else {
                     if recordsRemainder != nil || recordIDsToDeleteRemainder != nil {
                         // Now need to send next block of records
-                        lastSplit = self.updatePortion(requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                        lastSplit = self.updatePortion(database: database, requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
                         
                     } else {
                         completion?(nil)
@@ -138,7 +138,7 @@ class ICloud {
         }
     }
     
-    private func updatePortion(requireLess: Bool, lastSplit: Int, records: [CKRecord]?, recordIDsToDelete: [CKRecord.ID]?, recordsRemainder: [CKRecord]?, recordIDsToDeleteRemainder: [CKRecord.ID]?, completion: ((Error?)->())?) -> Int {
+    private func updatePortion(database: CKDatabase?, requireLess: Bool, lastSplit: Int, records: [CKRecord]?, recordIDsToDelete: [CKRecord.ID]?, recordsRemainder: [CKRecord]?, recordIDsToDeleteRemainder: [CKRecord.ID]?, completion: ((Error?)->())?) -> Int {
         
         // Limit exceeded - start at 400 and then split in two and try again
 
@@ -173,16 +173,17 @@ class ICloud {
             split = min(split, allRecords.count)
             let firstBlock = Array(allRecords.prefix(upTo: split))
             let secondBlock = (allRecords.count <= split ? nil : Array(allRecords.suffix(from: split)))
-            self.update(records: firstBlock, recordsRemainder: secondBlock, recordIDsToDeleteRemainder: allRecordIDsToDelete, completion: completion)
+            self.update(records: firstBlock, database: database, recordsRemainder: secondBlock, recordIDsToDeleteRemainder: allRecordIDsToDelete, completion: completion)
         } else {
             split = min(split, allRecordIDsToDelete.count)
             let firstBlock = Array(allRecordIDsToDelete.prefix(upTo: split))
             let secondBlock = (allRecordIDsToDelete.count <= split ? nil : Array(allRecordIDsToDelete.suffix(from: split)))
-            self.update(recordIDsToDelete: firstBlock, recordIDsToDeleteRemainder: secondBlock, completion: completion)
+            self.update(recordIDsToDelete: firstBlock, database: database, recordIDsToDeleteRemainder: secondBlock, completion: completion)
         }
         
         return split
     }
+
     
     public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: [String], completion: @escaping (Bool, String)->()) {
         var records = 0
@@ -195,27 +196,27 @@ class ICloud {
             _ = self.download(recordType: recordType,
                               sortKey: sortKey,
                               sortAscending: sortAscending,
-                                downloadAction: { (record) in
-                                    records += 1
-                                    if records > 1 {
-                                        self.writeString(fileHandle: fileHandle, string: ",\n")
-                                    }
-                                    self.writeString(fileHandle: fileHandle, string: "     \(elementName) : ")
-                                    if !self.writeRecord(fileHandle: fileHandle, elementName: elementName, record: record) {
-                                        errorMessage = "Error writing record"
-                                        ok = false
-                                    }
+                              downloadAction: { (record) in
+                                records += 1
+                                if records > 1 {
+                                    self.writeString(fileHandle: fileHandle, string: ",\n")
+                                }
+                                self.writeString(fileHandle: fileHandle, string: "     \(elementName) : ")
+                                if !self.writeRecord(fileHandle: fileHandle, elementName: elementName, record: record) {
+                                    errorMessage = "Error writing record"
+                                    ok = false
+                                }
             },
-                                completeAction: {
-                                    self.writeString(fileHandle: fileHandle, string: "\n     }")
-                                    self.writeString(fileHandle: fileHandle, string: "\n}")
-                                    fileHandle.closeFile()
-                                    completion(ok, (ok ? "Successfully backed up \(records) \(recordType)" : (errorMessage != "" ? errorMessage : "Unexpected error")))
+                              completeAction: {
+                                self.writeString(fileHandle: fileHandle, string: "\n     }")
+                                self.writeString(fileHandle: fileHandle, string: "\n}")
+                                fileHandle.closeFile()
+                                completion(ok, (ok ? "Successfully backed up \(records) \(recordType)" : (errorMessage != "" ? errorMessage : "Unexpected error")))
             },
-                                failureAction: { (message) in
-                                    fileHandle.closeFile()
-                                    errorMessage = "Error downloading \(recordType) (\(message))"
-                                    completion(false, errorMessage)
+                              failureAction: { (message) in
+                                fileHandle.closeFile()
+                                errorMessage = "Error downloading \(recordType) (\(message))"
+                                completion(false, errorMessage)
             })
         } else {
             completion(false, "Error creating backup file")

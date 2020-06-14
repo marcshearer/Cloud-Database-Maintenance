@@ -27,7 +27,7 @@ class ClearPrivateSettings {
             recordIDsToDelete.append(record.recordID)
         },
         completeAction: {
-            self.iCloud.update(records: nil, recordIDsToDelete: recordIDsToDelete) { (error) in
+            self.iCloud.update(records: nil, recordIDsToDelete: recordIDsToDelete, database: privateDatabase) { (error) in
                 completion(self.iCloud.errorMessage(error))
             }
         },
