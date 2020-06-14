@@ -19,14 +19,14 @@ class ReadableRecordIDs {
         
         self.completion = completion
         
-        let actions = [/*(recordType: "Games", columns: ["datePlayed", "deviceName", "gameUUID"]),
+        let actions = [(recordType: "Games", columns: ["datePlayed", "deviceName", "gameUUID"]),
                        (recordType: "Invites", columns: ["hostEmail", "inviteEmail", "inviteUUID"]),
                        (recordType: "Links", columns: ["fromPlayer", "toPlayer"]),
-                       (recordType: "Notifications", columns: ["email"]),*/
-                       (recordType: "Participants", columns: ["datePlayed", "email", "gameUUID"])/*,
+                       (recordType: "Notifications", columns: ["email"]),
+                       (recordType: "Participants", columns: ["datePlayed", "email", "gameUUID"]),
                        (recordType: "Players", columns: ["name", "email"]),
                        (recordType: "PlayerUUIDs", columns: ["email"]),
-                       (recordType: "Version", columns: [])*/]
+                       (recordType: "Version", columns: [])]
         
         func iterate(index: Int) {
             if index < actions.count {
