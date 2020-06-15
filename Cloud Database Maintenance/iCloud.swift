@@ -26,7 +26,7 @@ class ICloud {
                          resultsLimit: Int! = nil,
                          downloadAction: ((CKRecord) -> ())? = nil,
                          completeAction: (() -> ())? = nil,
-                         failureAction:  ((String) -> ())? = nil,
+                         failureAction:  ((Error?) -> ())? = nil,
                          cursor: CKQueryCursor! = nil,
                          rowsRead: Int = 0) {
         
@@ -57,32 +57,37 @@ class ICloud {
         queryOperation.queuePriority = .veryHigh
         queryOperation.resultsLimit = (resultsLimit != nil ? resultsLimit : (rowsRead < 100 ? 20 : 100))
         queryOperation.recordFetchedBlock = { (record) -> Void in
-            let cloudObject: CKRecord = record
-            rowsRead += 1
-            downloadAction?(cloudObject)
+            Utility.mainThread {
+                let cloudObject: CKRecord = record
+                rowsRead += 1
+                downloadAction?(cloudObject)
+            }
         }
         
         queryOperation.queryCompletionBlock = { (cursor, error) -> Void in
-            if error != nil {
-                failureAction?("Unable to fetch records for \(recordType) - \(error?.localizedDescription ?? "")")
-                return
-            }
-            
-            if cursor != nil && !self.cancelRequest && (resultsLimit == nil || rowsRead < resultsLimit) {
-                // More to come - recurse
-                _ = self.download(recordType: recordType,
-                                  database: database,
-                                  keys: keys,
-                                  sortKey: sortKey,
-                                  sortAscending: sortAscending,
-                                  predicate: predicate,
-                                  resultsLimit: resultsLimit,
-                                  downloadAction: downloadAction,
-                                  completeAction: completeAction,
-                                  failureAction: failureAction,
-                                  cursor: cursor, rowsRead: rowsRead)
-            } else {
-                completeAction?()
+            Utility.mainThread {
+                
+                if error != nil {
+                    failureAction?(error)
+                    return
+                }
+                
+                if cursor != nil && !self.cancelRequest && (resultsLimit == nil || rowsRead < resultsLimit) {
+                    // More to come - recurse
+                    _ = self.download(recordType: recordType,
+                                      database: database,
+                                      keys: keys,
+                                      sortKey: sortKey,
+                                      sortAscending: sortAscending,
+                                      predicate: predicate,
+                                      resultsLimit: resultsLimit,
+                                      downloadAction: downloadAction,
+                                      completeAction: completeAction,
+                                      failureAction: failureAction,
+                                      cursor: cursor, rowsRead: rowsRead)
+                } else {
+                    completeAction?()
+                }
             }
         }
         
@@ -109,26 +114,29 @@ class ICloud {
             
             // Assign a completion handler
             uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
-                if error != nil {
-                    if let error = error as? CKError {
-                        if error.code == .limitExceeded {
-                            // Limit exceeded - start at 400 and then split in two and try again
-                            lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
-                        } else if error.code == .partialFailure {
-                            completion?(error)
+                Utility.mainThread {
+                    
+                    if error != nil {
+                        if let error = error as? CKError {
+                            if error.code == .limitExceeded {
+                                // Limit exceeded - start at 400 and then split in two and try again
+                                lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                            } else if error.code == .partialFailure {
+                                completion?(error)
+                            } else {
+                                completion?(error)
+                            }
                         } else {
                             completion?(error)
                         }
                     } else {
-                        completion?(error)
-                    }
-                } else {
-                    if recordsRemainder != nil || recordIDsToDeleteRemainder != nil {
-                        // Now need to send next block of records
-                        lastSplit = self.updatePortion(database: database, requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
-                        
-                    } else {
-                        completion?(nil)
+                        if recordsRemainder != nil || recordIDsToDeleteRemainder != nil {
+                            // Now need to send next block of records
+                            lastSplit = self.updatePortion(database: database, requireLess: false, lastSplit: lastSplit, records: nil, recordIDsToDelete: nil, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
+                            
+                        } else {
+                            completion?(nil)
+                        }
                     }
                 }
             }
@@ -184,6 +192,25 @@ class ICloud {
         return split
     }
 
+    public func initialise(recordType: String, database: CKDatabase? = nil, completion: @escaping (Error?)->()) {
+        var recordIDsToDelete: [CKRecordID] = []
+        
+        let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
+        let publicDatabase = cloudContainer.publicCloudDatabase
+        let database = database ?? publicDatabase
+        
+        self.download(recordType: recordType, database: database, downloadAction: { (record) in
+            recordIDsToDelete.append(record.recordID)
+        },
+        completeAction: {
+            self.update(records: nil, recordIDsToDelete: recordIDsToDelete, database: database) { (error) in
+                completion(error)
+            }
+        },
+        failureAction: { (error) in
+            completion(error)
+        })
+    }
     
     public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: [String], completion: @escaping (Bool, String)->()) {
         var records = 0
@@ -213,14 +240,36 @@ class ICloud {
                                 fileHandle.closeFile()
                                 completion(ok, (ok ? "Successfully backed up \(records) \(recordType)" : (errorMessage != "" ? errorMessage : "Unexpected error")))
             },
-                              failureAction: { (message) in
+                              failureAction: { (error) in
                                 fileHandle.closeFile()
-                                errorMessage = "Error downloading \(recordType) (\(message))"
+                                errorMessage = "Error downloading \(recordType) (\(self.errorMessage(error)))"
                                 completion(false, errorMessage)
             })
         } else {
             completion(false, "Error creating backup file")
         }
+    }
+    
+    public func getPlayerUUIDs(completion: @escaping ([String:String]?)->()) {
+        // Build cross refs for any existing player UUIDs and update players with any that are missing
+        var emails: [String:String] = [:]
+        
+        self.download(recordType: "players",
+        downloadAction: { (record) in
+            // Add to xref
+            if let email = record.value(forKey: "email") as? String,
+                let playerUUID = record.value(forKey: "playerUUID") as? String {
+                if playerUUID != "" {
+                    emails[playerUUID] = email
+                }
+            }
+        },
+        completeAction: {
+            completion(emails)
+        },
+        failureAction: { (error) in
+            completion(nil)
+        })
     }
     
     public func getDatabaseIdentifier(completion: @escaping (Bool, String?, String?)->()) {
@@ -233,8 +282,8 @@ class ICloud {
                           completeAction: {
                                 completion(true, nil, database)
                           },
-                          failureAction: { (message) in
-                                completion(false, message, nil)
+                          failureAction: { (error) in
+                            completion(false, "Error downloading version \(self.errorMessage(error))", nil)
                           })
     }
     

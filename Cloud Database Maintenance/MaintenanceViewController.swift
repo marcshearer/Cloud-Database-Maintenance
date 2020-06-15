@@ -19,6 +19,8 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     private var versionLayout: [Layout]!
     private var tableViewer: CloudTableViewer!
     private var firstTime = true
+    private var emails: [String:String] = [:]
+    private var iCloud = ICloud()
 
     @IBOutlet weak var tableList: NSTableView!
     @IBOutlet weak var tableView: NSTableView!
@@ -59,8 +61,18 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     internal func status(isBusy: Bool) {
     }
     
-    func derivedKey(recordType: String, key: String, record: CKRecord) -> String {
+    internal func derivedKey(recordType: String, key: String, record: CKRecord) -> String {
         return ""
+    }
+    
+    internal func emailSubstitute(recordType: String, key: String, record: CKRecord) -> String {
+        var result: String?
+        
+        if let value = record.value(forKey: key) as? String {
+            result = self.emails[value] ?? value
+        }
+        
+        return result ?? ""
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {
@@ -114,9 +126,14 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         case 0:
             table = "Players"
             if firstTime {
-                self.tableViewer.show(recordType: "Players", layout: self.playersLayout, sortAscending: true)
-                tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
-                firstTime = false
+                self.iCloud.getPlayerUUIDs() { (emails) in
+                    Utility.mainThread {
+                        self.emails = emails ?? [:]
+                        self.tableViewer.show(recordType: "Players", layout: self.playersLayout, sortAscending: true)
+                        tableView.selectRowIndexes(IndexSet(integer: row), byExtendingSelection: false)
+                        self.firstTime = false
+                    }
+                }
             }
         case 1:
             table = "Games"
@@ -193,7 +210,9 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
             Layout(key: "maxTwos",              title: "^Twos",         width: 50,      alignment: .right,  type: .int,         total: false),
             Layout(key: "maxTwosDate",          title: "Date",          width: 75,      alignment: .center, type: .date,        total: false),
             Layout(key: "syncDate",             title: "Sync date",     width: 75,      alignment: .center, type: .date,        total: false),
-            Layout(key: "thumbnailDate",        title: "Thumbnail",     width: 75,      alignment: .center, type: .date,        total: false)     ]
+            Layout(key: "thumbnailDate",        title: "Thumbnail",     width: 75,      alignment: .center, type: .date,        total: false),
+            Layout(key: "playerUUID",           title: "Player UUID",   width: -150,    alignment: .left,   type: .string,      total: false)
+        ]
         
         gamesLayout =
             [ Layout(key: "datePlayed",         title: "Last played",   width: 75,      alignment: .center, type: .date,        total: false),
@@ -210,7 +229,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         participantsLayout =
             [ Layout(key: "datePlayed",         title: "Last played",   width: 75,      alignment: .center, type: .date,        total: false),
               Layout(key: "name",               title: "Name",          width: 80,      alignment: .left,   type: .string,      total: false),
-              Layout(key: "email",              title: "Email",         width: -150,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "!playerUUID",        title: "Email",         width: -150,    alignment: .left,   type: .string,      total: false),
               Layout(key: "recordID",           title: "RecordID",      width: -150,    alignment: .left,   type: .string,      total: false),
               Layout(key: "totalScore",         title: "Score" ,        width: 50,      alignment: .right,  type: .int,         total: true),
               Layout(key: "gamesPlayed",        title: "Played",        width: 50,      alignment: .right,  type: .int,         total: true),
@@ -223,18 +242,20 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
               Layout(key: "excludeStats",       title: "Excl",          width: 30,      alignment: .center, type: .bool,        total: false),
               Layout(key: "syncDate",           title: "Sync date",     width: 75,      alignment: .center, type: .date,        total: false),
               Layout(key: "gameUUID",           title: "Game ID",       width: -150,    alignment: .left,   type: .string,      total: false),
-              Layout(key: "deviceUUID",         title: "Device ID",     width: -150,    alignment: .left,   type: .string,      total: false) ]
+              Layout(key: "deviceUUID",         title: "Device ID",     width: -150,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "playerUUID",         title: "Player UUID",   width: -150,    alignment: .left,   type: .string,      total: false)
+        ]
         
         invitesLayout =
             [ Layout(key: "expires",            title: "Expires",       width: -100,    alignment: .left,   type: .dateTime,    total: false),
               Layout(key: "hostDeviceName",     title: "Host device",   width: -100,    alignment: .left,   type: .string,      total: false),
-              Layout(key: "hostEmail",          title: "Host email",    width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "!hostPlayerUUID",    title: "Host email",    width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "hostName",           title: "Host name",     width: -100,    alignment: .left,   type: .string,      total: false),
-              Layout(key: "inviteEmail",        title: "Invite email",  width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "!invitePlayerUUID",  title: "Invite email",  width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "inviteUUID",         title: "Invite UUID",   width: -100,    alignment: .left,   type: .string,      total: false) ]
             
         notificationsLayout =
-            [ Layout(key: "email",              title: "Email",         width: -100,    alignment: .left,   type: .string,      total: false),
+            [ Layout(key: "!playerUUID",        title: "Email",         width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "message",            title: "Host email",    width: -100,    alignment: .left,   type: .string,      total: false) ]
             
         versionLayout =

@@ -40,7 +40,7 @@ class CheckDuplicateParticipants {
             }
             completion("No duplicates")
         }, failureAction: { (error) in
-            completion(error)
+            completion("Error downloading participants (\(self.iCloud.errorMessage(error)))")
         })
     }
 }

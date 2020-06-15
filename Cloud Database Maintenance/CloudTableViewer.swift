@@ -37,6 +37,8 @@ public protocol CloudTableViewerDelegate : class {
     
     func derivedKey(recordType: String, key: String, record: CKRecord) -> String
     
+    func emailSubstitute(recordType: String, key: String, record: CKRecord) -> String
+    
 }
 
 private class CloudTableViewerRequest {
@@ -89,7 +91,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         // Default sort to first non-derived column if unspecified
         if sortKey == "" {
             for layout in layout {
-                if layout.key.left(1) != "=" {
+                if layout.key.left(1) != "=" && layout.key.left(1) != "!" {
                     sortKey = layout.key
                     break
                 }
@@ -134,7 +136,17 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         self.layout = self.current.layout
         self.setupGrid(displayTableView: displayTableView, layout: self.layout)
         
-        let keys = layout.map {$0.key}
+        var keys: [String] = []
+        for key in layout.map({$0.key}) {
+            switch key.left(1) {
+            case "!":
+                keys.append(key.right(key.length - 1))
+            case "=":
+                break
+            default:
+                keys.append(key)
+            }
+        }
         self.setBusy(true)
         
         _ = self.iCloud.download(recordType: self.current.recordType,
@@ -179,9 +191,9 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                                     }
                                     
         },
-                                 failureAction: { (message) -> Void in
+                                 failureAction: { (error) in
                                     Utility.mainThread {
-                                        Utility.alertMessage(message)
+                                        Utility.alertMessage("Error downloading \(self.current.recordType!) (\(self.iCloud.errorMessage(error)))")
                                         self.current = nil
                                         self.pending = nil
                                         self.setBusy(false)
@@ -268,6 +280,8 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
                     var value: String
                     if column.key.left(1) == "=" {
                         value = delegate?.derivedKey(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: records[row]) ?? ""
+                    } else if column.key.left(1) == "!" {
+                        value = delegate?.emailSubstitute(recordType: self.current.recordType, key: column.key.right(column.key.length - 1), record: records[row]) ?? ""
                     } else if column.key == "recordID" {
                         value = records[row].recordID.recordName
                     }

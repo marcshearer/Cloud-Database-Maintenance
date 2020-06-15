@@ -14,12 +14,30 @@ class CreateLinks {
     public static let shared = CreateLinks()
     private let iCloud = ICloud()
     private var links: [(fromPlayer: String, toPlayer: String)] = []
+    private var emails: [String:String] = [:]
     
     public func execute(completion: @escaping (String)->()) {
+        self.iCloud.getPlayerUUIDs(completion: { (emails) in
+            if emails == nil {
+                completion("Error loading email/player UUID cross-ref")
+            } else {
+                self.emails = emails!
+                self.iCloud.initialise(recordType: "links") { (error) in
+                    if error != nil {
+                        completion("Error clearing links table")
+                    } else {
+                        self.createLinks(completion: completion)
+                    }
+                }
+            }
+        })
+    }
+    
+    private func createLinks(completion: @escaping (String)->()) {
         var participants: [(gameUUID: String, player: String)] = []
         
         self.iCloud.download(recordType: "Participants", downloadAction: { (record) in
-            if let player = record.value(forKey: "email") as? String,
+            if let player = record.value(forKey: "playerUUID") as? String,
                 let gameUUID = record.value(forKey: "gameUUID") as? String {
                 participants.append((player: player, gameUUID: gameUUID))
             }
@@ -47,7 +65,7 @@ class CreateLinks {
             }
             
             for link in self.links {
-                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(link.fromPlayer)->\(link.toPlayer)"))
+                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(link.fromPlayer)-\(link.toPlayer)"))
                 cloudObject.setValue(link.fromPlayer, forKey: "fromPlayer")
                 cloudObject.setValue(link.toPlayer, forKey: "toPlayer")
                 cloudObjectList.append(cloudObject)
@@ -68,12 +86,16 @@ class CreateLinks {
     
     private func addLinks(_ gamePlayers: [String]) {
         for fromPlayer in gamePlayers {
-            for toPlayer in gamePlayers {
-                if fromPlayer != toPlayer {
-                    if links.first(where: { $0.fromPlayer == fromPlayer && $0.toPlayer == toPlayer }) == nil {
-                        links.append((fromPlayer: fromPlayer, toPlayer: toPlayer))
+            if let fromEmail = emails[fromPlayer] {
+                for toPlayer in gamePlayers {
+                    if fromPlayer != toPlayer {
+                        if links.first(where: { $0.fromPlayer == fromEmail && $0.toPlayer == toPlayer }) == nil {
+                            links.append((fromPlayer: fromEmail, toPlayer: toPlayer))
+                        }
                     }
                 }
+            } else {
+                fatalError("Invalid player UUID encountered")
             }
         }
     }

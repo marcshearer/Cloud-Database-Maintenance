@@ -39,7 +39,7 @@ class CheckDuplicateGames {
             }
             completion("Success")
         }, failureAction: { (error) in
-            completion(error)
+            completion("Error downloading games (\(self.iCloud.errorMessage(error)))")
         })
     }
 }
