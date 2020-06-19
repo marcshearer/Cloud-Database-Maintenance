@@ -17,6 +17,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     private var invitesLayout: [Layout]!
     private var notificationsLayout: [Layout]!
     private var versionLayout: [Layout]!
+    private var linksLayout: [Layout]!
     private var tableViewer: CloudTableViewer!
     private var firstTime = true
     private var emails: [String:String] = [:]
@@ -76,7 +77,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {
-        return 6
+        return 7
     }
     
     internal func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
@@ -105,6 +106,10 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         case 5:
             self.tableViewer.show(recordType: "Version",
                                   layout: self.versionLayout,
+                                  sortAscending: false)
+        case 6:
+            self.tableViewer.show(recordType: "Links",
+                                  layout: self.linksLayout,
                                   sortAscending: false)
         default:
             break
@@ -145,6 +150,8 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
             table = "Notifications"
         case 5:
             table = "Version"
+        case 6:
+            table = "Links"
         default:
             table = ""
         }
@@ -173,8 +180,8 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
                 result = true
             }
         case "Participants":
-            if let email = Utility.objectString(cloudObject: record, forKey: "email") {
-                let predicate = NSPredicate(format: "email = %@", email)
+            if let playerUUID = Utility.objectString(cloudObject: record, forKey: "playerUUID") {
+                let predicate = NSPredicate(format: "playerUUID = %@", playerUUID)
                 self.tableViewer.show(recordType: "Players", layout: self.playersLayout, sortAscending: true, predicate: predicate)
                 self.tableList.deselectAll(self)
                 result = true
@@ -270,6 +277,11 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
               Layout(key: "rabbitMQUri",        title: "rabbitMQ URI",  width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "LogQueue",           title: "Log queue",     width: -100,    alignment: .left,   type: .string,      total: false) ]
 
+        linksLayout =
+            [ Layout(key: "fromEmail",          title: "From email",    width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "!toPlayerUUID",      title: "To email",      width: -100,    alignment: .left,   type: .string,    total: false),
+              Layout(key: "fromPlayerUUID",     title: "From UUID",     width: -100,    alignment: .left,   type: .string,    total: false),
+              Layout(key: "toPlayerUUID",       title: "To UUID",       width: -100,    alignment: .left,   type: .string,    total: false)]
     }
     
 }

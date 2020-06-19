@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import CloudKit
 
 class MenuBar {
     
@@ -61,8 +62,12 @@ class MenuBar {
                                                     MenuBar.backupNow()
                                                 }
                                             },
-                            failureAction: { (message) in
-                                                Utility.alertMessage("Error getting last game (\(message))")
+                            failureAction: { (error) in
+                                                var message = "no details"
+                                                if let error = error as? CKError {
+                                                    message = error.localizedDescription
+                                                }
+                                                 Utility.alertMessage("Error getting last game (\(message))")
                                             })
         }
     }
@@ -74,5 +79,12 @@ class MenuBar {
                 Utility.alertMessage(message)
             }
         })
+    }
+    
+    public class func setRestoreTitle(title: String, enabled: Bool? = nil) {
+        Utility.appDelegate?.restoreMenuItem.title = title
+        if let enabled = enabled {
+            Utility.appDelegate?.restoreMenuItem.isEnabled = enabled
+        }
     }
 }

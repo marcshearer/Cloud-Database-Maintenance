@@ -41,9 +41,7 @@ class EmailToUUID {
                     self.initialise(recordType: "Notifications", completion: self.controller)
                     
                 case 4:
-                    self.replace(recordType: "Links",
-                                 keys: [("toPlayer", "toPlayer")],
-                                 completion: self.controller)
+                    self.initialise(recordType: "Links", completion: self.controller)
                     
                 case 5:
                     self.replace(recordType: "Participants",
@@ -194,6 +192,8 @@ class EmailToUUID {
                         completion(self.iCloud.errorMessage(error))
                     }
                 }
+            } else {
+                completion(nil)
             }
         },
         failureAction: { (error) in

@@ -20,7 +20,7 @@ class Backup {
         MenuBar.setBackupTitle(title: "Backup in progress...", enabled: (disableMenu ? false : nil))
         self.tables = []
         self.errors = false
-        self.dateString = Utility.dateString(Date(), format: "yyyy-MM-dd-HH-mm-ss-SSS", localized: false)
+        self.dateString = Utility.dateString(Date(), format: Config.backupDirectoryDateFormat, localized: false)
         
         self.addTable(recordType: "Players", groupName: "players", elementName:  "player", sortKey: ["name"], sortAscending: true)
         self.addTable(recordType: "Games", groupName: "games", elementName:  "game", sortKey: ["datePlayed"], sortAscending: false)
@@ -28,8 +28,11 @@ class Backup {
         self.addTable(recordType: "Invites", groupName: "invites", elementName:  "invite")
         self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
         self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
-        
-        
+        if Utility.appDelegate!.database == "Development" {
+               // TODO Remove condition once live
+            self.addTable(recordType: "Links", groupName: "links", elementName: "link")
+        }
+         
         self.backupNext(count: 0,
                         resetMessage: resetMessage,
                         disableMenu: disableMenu,
@@ -75,8 +78,17 @@ class Backup {
     }
     
     private func backupTable(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, completion: @escaping (Bool, String)->()) {
+        let fileManager = FileManager()
         
-        self.iCloud.backup(recordType: recordType, groupName: groupName, elementName: elementName, sortKey: sortKey, sortAscending: sortAscending, directory: ["backups", Utility.appDelegate!.database, dateString], completion: completion)
+        let documentsUrl:URL = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last! as URL
+        let backupsUrl = documentsUrl.appendingPathComponent("backups")
+        let databaseBackupsUrl = backupsUrl.appendingPathComponent(Utility.appDelegate!.database)
+        let thisBackupUrl = databaseBackupsUrl.appendingPathComponent(self.dateString)
+        let assetsBackupUrl = databaseBackupsUrl.appendingPathComponent("assets")
+        _ = (try? fileManager.createDirectory(at: thisBackupUrl, withIntermediateDirectories: true))
+        _ = (try? fileManager.createDirectory(at: assetsBackupUrl, withIntermediateDirectories: true))
+        
+        self.iCloud.backup(recordType: recordType, groupName: groupName, elementName: elementName, sortKey: sortKey, sortAscending: sortAscending, directory: thisBackupUrl, assetsDirectory: assetsBackupUrl, completion: completion)
     }
 }
 

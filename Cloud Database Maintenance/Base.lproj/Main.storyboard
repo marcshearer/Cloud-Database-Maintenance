@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16097"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -106,7 +106,7 @@
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="Jct-It-7Bc" id="V6F-6d-Heu">
                                             <rect key="frame" x="0.0" y="0.0" width="198" height="535"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -138,7 +138,7 @@
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="qrM-fo-yHd" id="ZGm-nA-vDT">
                                             <rect key="frame" x="0.0" y="0.0" width="758" height="535"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
@@ -186,7 +186,7 @@
                         <windowStyleMask key="styleMask" titled="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
                         <rect key="contentRect" x="-1626" y="133" width="480" height="270"/>
-                        <rect key="screenRect" x="-1920" y="-180" width="1920" height="1057"/>
+                        <rect key="screenRect" x="-1680" y="-150" width="1680" height="1027"/>
                         <connections>
                             <outlet property="delegate" destination="bqj-9r-Qi4" id="0eV-OQ-hAH"/>
                         </connections>
@@ -199,10 +199,10 @@
             </objects>
             <point key="canvasLocation" x="1105" y="493"/>
         </scene>
-        <!--Window Controller-->
+        <!--Settings Window Controller-->
         <scene sceneID="avX-iM-ofE">
             <objects>
-                <windowController storyboardIdentifier="SettingsWindow" id="2o2-fo-W0j" sceneMemberID="viewController">
+                <windowController storyboardIdentifier="SettingsWindow" id="2o2-fo-W0j" userLabel="Settings Window Controller" sceneMemberID="viewController">
                     <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="mMx-oI-6jf">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -219,6 +219,123 @@
                 <customObject id="Lsj-mH-eRd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1722" y="493"/>
+        </scene>
+        <!--Restore Window Controller-->
+        <scene sceneID="L0h-Q1-75f">
+            <objects>
+                <windowController storyboardIdentifier="RestoreWindow" id="T8H-Oa-ToV" userLabel="Restore Window Controller" customClass="MenubarWindowController" customModule="Cloud_Database_Maintenance" customModuleProvider="target" sceneMemberID="viewController">
+                    <window key="window" title="Restore Cloud Database" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="Bsd-OA-yDT">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="1829" y="240" width="480" height="270"/>
+                        <rect key="screenRect" x="1600" y="0.0" width="1600" height="877"/>
+                        <connections>
+                            <outlet property="delegate" destination="T8H-Oa-ToV" id="s4c-Xl-XGj"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="BBB-Fs-GDG" kind="relationship" relationship="window.shadowedContentViewController" id="Esp-cT-w68"/>
+                    </connections>
+                </windowController>
+                <customObject id="CeC-YA-f3j" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2265" y="494"/>
+        </scene>
+        <!--Restore View Controller-->
+        <scene sceneID="5po-NH-6iE">
+            <objects>
+                <viewController id="BBB-Fs-GDG" customClass="RestoreViewController" customModule="Cloud_Database_Maintenance" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" id="eQQ-g8-Hbq">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nt9-6Q-cyh">
+                                <rect key="frame" x="377" y="-3" width="75" height="32"/>
+                                <buttonCell key="cell" type="push" title="Close" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ws8-t1-Xnv">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="closeButtonClick:" target="BBB-Fs-GDG" id="bhm-AG-nDu"/>
+                                </connections>
+                            </button>
+                            <scrollView autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eOt-Pk-FZc">
+                                <rect key="frame" x="0.0" y="29" width="450" height="271"/>
+                                <clipView key="contentView" id="N8t-XU-tnH">
+                                    <rect key="frame" x="1" y="0.0" width="448" height="270"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="5UN-zT-2kv" id="atL-b5-btd">
+                                            <rect key="frame" x="0.0" y="0.0" width="448" height="245"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                            <size key="intercellSpacing" width="3" height="2"/>
+                                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
+                                            <tableColumns>
+                                                <tableColumn identifier="Table" width="116" minWidth="40" maxWidth="1000" id="TT2-fK-SNC">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Table">
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="Jg7-xi-W03">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                </tableColumn>
+                                                <tableColumn identifier="Message" width="326" minWidth="40" maxWidth="1000" id="wef-MY-VC3">
+                                                    <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Message">
+                                                        <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                    </tableHeaderCell>
+                                                    <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="mBU-y4-SY7">
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                </tableColumn>
+                                            </tableColumns>
+                                            <connections>
+                                                <outlet property="dataSource" destination="BBB-Fs-GDG" id="EJr-vp-Kdo"/>
+                                                <outlet property="delegate" destination="BBB-Fs-GDG" id="56u-6u-Fo7"/>
+                                            </connections>
+                                        </tableView>
+                                    </subviews>
+                                </clipView>
+                                <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="aL4-Ya-M5e">
+                                    <rect key="frame" x="1" y="117" width="236.82377624511719" height="16"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" doubleValue="1" horizontal="NO" id="jaB-3r-6Cs">
+                                    <rect key="frame" x="224" y="17" width="15" height="102"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </scroller>
+                                <tableHeaderView key="headerView" id="5UN-zT-2kv">
+                                    <rect key="frame" x="0.0" y="0.0" width="448" height="25"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableHeaderView>
+                            </scrollView>
+                        </subviews>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Nt9-6Q-cyh" secondAttribute="trailing" constant="4" id="HJC-9C-tFv"/>
+                            <constraint firstItem="eOt-Pk-FZc" firstAttribute="top" secondItem="eQQ-g8-Hbq" secondAttribute="top" id="P5n-ku-PTT"/>
+                            <constraint firstAttribute="bottom" secondItem="Nt9-6Q-cyh" secondAttribute="bottom" constant="4" id="YDD-Uv-uux"/>
+                            <constraint firstItem="eOt-Pk-FZc" firstAttribute="leading" secondItem="eQQ-g8-Hbq" secondAttribute="leading" id="a72-PF-mhK"/>
+                            <constraint firstItem="Nt9-6Q-cyh" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="eQQ-g8-Hbq" secondAttribute="leading" constant="20" symbolic="YES" id="iXW-0B-mXn"/>
+                            <constraint firstAttribute="trailing" secondItem="eOt-Pk-FZc" secondAttribute="trailing" id="oi4-yV-Us6"/>
+                            <constraint firstItem="Nt9-6Q-cyh" firstAttribute="top" secondItem="eOt-Pk-FZc" secondAttribute="bottom" constant="4" id="sXL-cf-IK9"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="closeButton" destination="Nt9-6Q-cyh" id="sUL-tf-6o3"/>
+                        <outlet property="tableView" destination="atL-b5-btd" id="n7P-G0-Oco"/>
+                    </connections>
+                </viewController>
+                <customObject id="Zv7-Pu-ZOC" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2265" y="949"/>
         </scene>
         <!--Settings View Controller-->
         <scene sceneID="YBu-Yy-Fca">
@@ -294,11 +411,11 @@
                             <scrollView fixedFrame="YES" borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" hasVerticalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MpE-gj-Vjk">
                                 <rect key="frame" x="13" y="156" width="315" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
-                                <clipView key="contentView" ambiguous="YES" drawsBackground="NO" copiesOnScroll="NO" id="Yb8-hD-a7a">
+                                <clipView key="contentView" drawsBackground="NO" copiesOnScroll="NO" id="Yb8-hD-a7a">
                                     <rect key="frame" x="0.0" y="0.0" width="315" height="80"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textView focusRingType="none" ambiguous="YES" editable="NO" selectable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="QdJ-IK-TwF">
+                                        <textView focusRingType="none" editable="NO" selectable="NO" drawsBackground="NO" importsGraphics="NO" verticallyResizable="YES" usesFontPanel="YES" continuousSpellChecking="YES" allowsUndo="YES" usesRuler="YES" allowsNonContiguousLayout="YES" quoteSubstitution="YES" dashSubstitution="YES" spellingCorrection="YES" smartInsertDelete="YES" id="QdJ-IK-TwF">
                                             <rect key="frame" x="0.0" y="0.0" width="315" height="80"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
@@ -310,7 +427,7 @@
                                                     <string key="content">Backup will cut in dependent on the frequency. If there has been a game since last backup a backup will take place unless the interval since the last backup is less than the minimum interval. If the time to the previous backup is more than the maximum interval a backup will take place even if there has not been a new game.</string>
                                                     <attributes>
                                                         <color key="NSColor" name="textColor" catalog="System" colorSpace="catalog"/>
-                                                        <font key="NSFont" metaFont="smallSystem"/>
+                                                        <font key="NSFont" metaFont="label" size="11"/>
                                                         <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                     </attributes>
                                                 </fragment>
@@ -405,14 +522,13 @@ Gw
                                     <subviews>
                                         <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" headerView="Ov4-5M-mLX" id="oiX-Zp-ZQb">
                                             <rect key="frame" x="0.0" y="0.0" width="530" height="247"/>
-                                            <autoresizingMask key="autoresizingMask"/>
+                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <size key="intercellSpacing" width="3" height="2"/>
                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                             <tableColumns>
                                                 <tableColumn identifier="Table" width="116" minWidth="40" maxWidth="1000" id="emh-oa-rhz">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Table">
-                                                        <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>
@@ -425,7 +541,6 @@ Gw
                                                 </tableColumn>
                                                 <tableColumn identifier="Message" width="408" minWidth="40" maxWidth="1000" id="HOS-ex-skH">
                                                     <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" title="Message">
-                                                        <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                     </tableHeaderCell>

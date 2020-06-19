@@ -19,18 +19,18 @@ class ReadableRecordIDs {
         
         self.completion = completion
         
-        let actions = [(recordType: "Games", columns: ["datePlayed", "deviceName", "gameUUID"]),
-                       (recordType: "Invites", columns: ["hostName", "hostPlayerUUID", "invitePlayerUUID", "inviteUUID"]),
-                       (recordType: "Links", columns: ["fromPlayer", "toPlayer"]),
-                       (recordType: "Notifications", columns: ["playerUUID"]),
-                       (recordType: "Participants", columns: ["datePlayed", "playerUUID", "gameUUID"]),
-                       (recordType: "Players", columns: ["name", "email"]),
-                       (recordType: "Version", columns: [])]
+        let recordTypes = ["Games",
+                           "Invites",
+                           "Links",
+                           "Notifications",
+                           "Participants",
+                           "Players",
+                           "Version"]
         
         func iterate(index: Int) {
-            if index < actions.count {
-                let action = actions[index]
-                self.createReadableRecordIDs(recordType: action.recordType, columns: action.columns)
+            if index < recordTypes.count {
+                let recordType = recordTypes[index]
+                self.createReadableRecordIDs(recordType: recordType)
                 { (success, message) in
                     if success {
                         iterate(index: index + 1)
@@ -46,7 +46,7 @@ class ReadableRecordIDs {
         iterate(index: 0)
     }
     
-    func createReadableRecordIDs(recordType: String, columns: [String], completion: @escaping (Bool, String)->()) {
+    func createReadableRecordIDs(recordType: String, completion: @escaping (Bool, String)->()) {
         var cloudObjectList: [CKRecord] = []
         var tempID: [String] = []
         
@@ -60,27 +60,16 @@ class ReadableRecordIDs {
 
             for cloudObject in cloudObjectList {
                 
-                var recordID = recordType
-                for column in columns {
-                    recordID += "-"
-                    let value = cloudObject.value(forKey: column)
-                    if let date = value as? Date {
-                        recordID += Utility.dateString(date, format: "yyyy-MM-dd", localized: false)
-                    } else if value == nil {
-                        recordID += "NULL"
-                    } else {
-                        recordID += value as! String
-                    }
-                }
-                if recordID != cloudObject.recordID.recordName {
-                    let newCloudObject = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordID))
+                let recordID = self.iCloud.recordID(from: cloudObject)
+                if recordID.recordName != cloudObject.recordID.recordName {
+                    let newCloudObject = CKRecord(recordType: recordType, recordID: recordID)
                     for key in cloudObject.allKeys() {
                         if key == "thumbnail" {
                             let thumbnail = Utility.objectImage(cloudObject: cloudObject, forKey: key)
-                            if !Utility.imageToObject(cloudObject: newCloudObject, thumbnail: thumbnail, name: recordID) {
+                            if !Utility.imageToObject(cloudObject: newCloudObject, thumbnail: thumbnail, name: recordID.recordName) {
                                 fatalError("Error copying image")
                             }
-                            tempID.append(recordID)
+                            tempID.append(recordID.recordName)
                         } else {
                             let value = cloudObject.value(forKey: key)
                             newCloudObject.setValue(value, forKey: key)

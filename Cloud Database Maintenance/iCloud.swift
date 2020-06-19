@@ -8,6 +8,7 @@
 
 import Foundation
 import CloudKit
+import Cocoa
 
 class ICloud {
     
@@ -37,7 +38,7 @@ class ICloud {
         
         // Fetch player records from cloud
         let cloudContainer = CKContainer(identifier: Config.iCloudIdentifier)
-        let publicDatabase = database ?? cloudContainer.publicCloudDatabase
+        let database = database ?? cloudContainer.publicCloudDatabase
         if cursor == nil {
             // First time in - set up the query
             let query = CKQuery(recordType: recordType, predicate: predicate)
@@ -55,6 +56,7 @@ class ICloud {
         }
         queryOperation.desiredKeys = keys
         queryOperation.queuePriority = .veryHigh
+        queryOperation.qualityOfService = .userInteractive
         queryOperation.resultsLimit = (resultsLimit != nil ? resultsLimit : (rowsRead < 100 ? 20 : 100))
         queryOperation.recordFetchedBlock = { (record) -> Void in
             Utility.mainThread {
@@ -92,7 +94,7 @@ class ICloud {
         }
         
         // Execute the query - disable
-        publicDatabase.add(queryOperation)
+        database.add(queryOperation)
     }
     
     public func update(records: [CKRecord]? = nil, recordIDsToDelete: [CKRecord.ID]? = nil, database: CKDatabase? = nil, recordsRemainder: [CKRecord]? = nil, recordIDsToDeleteRemainder: [CKRecord.ID]? = nil, completion: ((Error?)->())? = nil) {
@@ -111,9 +113,11 @@ class ICloud {
             
             uploadOperation.isAtomic = true
             uploadOperation.database = database
+            uploadOperation.qualityOfService = .userInteractive
             
             // Assign a completion handler
             uploadOperation.modifyRecordsCompletionBlock = { (savedRecords: [CKRecord]?, deletedRecords: [CKRecord.ID]?, error: Error?) -> Void in
+
                 Utility.mainThread {
                     
                     if error != nil {
@@ -212,14 +216,13 @@ class ICloud {
         })
     }
     
-    public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: [String], completion: @escaping (Bool, String)->()) {
+    public func backup(recordType: String, groupName: String, elementName: String, sortKey: [String]? = nil, sortAscending: Bool? = nil, directory: URL, assetsDirectory: URL, completion: @escaping (Bool, String)->()) {
         var records = 0
         var errorMessage = ""
         var ok = true
         
-        
         if let fileHandle = openFile(directory: directory, recordType: recordType) {
-            self.writeString(fileHandle: fileHandle, string: "{ \(groupName) : {\n")
+            self.writeString(fileHandle: fileHandle, string: "{ \"\(groupName)\" : [\n")
             _ = self.download(recordType: recordType,
                               sortKey: sortKey,
                               sortAscending: sortAscending,
@@ -228,14 +231,15 @@ class ICloud {
                                 if records > 1 {
                                     self.writeString(fileHandle: fileHandle, string: ",\n")
                                 }
-                                self.writeString(fileHandle: fileHandle, string: "     \(elementName) : ")
-                                if !self.writeRecord(fileHandle: fileHandle, elementName: elementName, record: record) {
+                                self.writeString(fileHandle: fileHandle, string: "     { \"\(elementName)\" : ")
+                                if !self.writeRecord(fileHandle: fileHandle, assetsDirectory: assetsDirectory, elementName: elementName, record: record) {
                                     errorMessage = "Error writing record"
                                     ok = false
                                 }
+                                self.writeString(fileHandle: fileHandle, string: "\n     }")
             },
                               completeAction: {
-                                self.writeString(fileHandle: fileHandle, string: "\n     }")
+                                self.writeString(fileHandle: fileHandle, string: "\n     ]")
                                 self.writeString(fileHandle: fileHandle, string: "\n}")
                                 fileHandle.closeFile()
                                 completion(ok, (ok ? "Successfully backed up \(records) \(recordType)" : (errorMessage != "" ? errorMessage : "Unexpected error")))
@@ -248,6 +252,101 @@ class ICloud {
         } else {
             completion(false, "Error creating backup file")
         }
+    }
+    
+    public func restore(directory: URL, assetsDirectory: URL, recordType: String, groupName: String, elementName: String, completion: @escaping (Bool, String)->()) {
+        var records: [CKRecord] = []
+        
+        let fileURL = directory.appendingPathComponent("\(recordType).json")
+        do {
+            let fileContents = try Data(contentsOf: fileURL, options: [])
+            let fileDictionary = try JSONSerialization.jsonObject(with: fileContents, options: []) as! [String:Any?]
+            let contents = fileDictionary[groupName] as! [[String:Any?]]
+            
+            for record in contents {
+                let keys = record[elementName] as! [String:Any]
+                
+                // Construct record ID
+                var recordID = recordType
+                for column in Config.recordIdKeys[recordType]! {
+                    recordID += "+"
+                    let value = self.value(forKey: column, keys: keys, assetsDirectory: assetsDirectory)
+                    if let date = value as? Date {
+                        recordID += Utility.dateString(date, format: Config.recordIdDateFormat, localized: false)
+                    } else if value == nil {
+                        if column.right(10).lowercased() == "playeruuid" {
+                            // Might not have them yet - TODO remove after go live
+                            recordID += UUID().uuidString
+                        } else {
+                            recordID += "NULL"
+                        }
+                    } else {
+                        recordID += value as! String
+                    }
+                }
+                
+                var errors = false
+                let cloudObject = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordID))
+                for (keyName, _) in keys {
+                    if recordType == "Version" && keyName == "database" {
+                        // Database flag - do not overwrite
+                    } else {
+                        if let actualValue = self.value(forKey: keyName, keys: keys, assetsDirectory: assetsDirectory) {
+                            cloudObject.setValue(actualValue, forKey: keyName)
+                        } else {
+                            completion(false, "Error in \(recordType) - Invalid key value for \(keyName) in \(recordID)")
+                            errors = true
+                            break
+                        }
+                    }
+                }
+                if errors {
+                    break
+                } else {
+                    records.append(cloudObject)
+                }
+            }
+            if !records.isEmpty {
+                self.initialise(recordType: recordType) { (error) in
+                    Utility.mainThread {
+                        if error != nil {
+                            completion(false, self.errorMessage(error))
+                        } else {
+                            self.update(records: records) { (error) in
+                                Utility.mainThread {
+                                    if error == nil {
+                                        completion(true, "\(records.count) records updated")
+                                    } else {
+                                        completion(false, self.errorMessage(error))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                completion(true, "No records to update")
+            }
+        } catch let error as NSError {
+            completion(false, "Error opening \(recordType) in backup \(error.localizedDescription)")
+        }
+    }
+    
+    private func value(forKey name: String, keys: [String:Any], assetsDirectory: URL) -> Any? {
+        var result: Any?
+        if let specialValue = keys[name] as? [String:String] {
+            // Special value
+            if specialValue.keys.first == "date" {
+                result = Utility.dateFromString(specialValue["date"]!, format: Config.backupDateFormat, localized: false)
+            } else if specialValue.keys.first == "asset" {
+                let assetDescriptor = specialValue["asset"]!
+                let assetUrl = assetsDirectory.appendingPathComponent(assetDescriptor).appendingPathExtension("jpeg")
+                result = CKAsset(fileURL: assetUrl)
+            }
+        } else {
+            result = keys[name]
+        }
+        return result
     }
     
     public func getPlayerUUIDs(completion: @escaping ([String:String]?)->()) {
@@ -287,33 +386,48 @@ class ICloud {
                           })
     }
     
-    private func openFile(directory: [String], recordType: String) -> FileHandle! {
+    private func openFile(directory: URL, recordType: String) -> FileHandle! {
         var fileHandle: FileHandle!
         
-        let dirUrl:URL = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last! as URL
-        var subDirUrl = dirUrl
-        for subDir in directory {
-            subDirUrl = subDirUrl.appendingPathComponent(subDir)
-        }
-        let fileUrl =  subDirUrl.appendingPathComponent("\(recordType).json")
+        let fileUrl =  directory.appendingPathComponent("\(recordType).json")
         let fileManager = FileManager()
-        do {
-            try fileManager.createDirectory(at: subDirUrl, withIntermediateDirectories: true)
-        } catch {
-        }
         fileManager.createFile(atPath: fileUrl.path, contents: nil)
         fileHandle = FileHandle(forWritingAtPath: fileUrl.path)
         
         return fileHandle
     }
     
-    private func writeRecord(fileHandle: FileHandle, elementName: String, record: CKRecord) -> Bool {
+    private func writeRecord(fileHandle: FileHandle, assetsDirectory: URL, elementName: String, record: CKRecord) -> Bool {
         // Build a dictionary from the record
-        var dictionary: [String : String] = [:]
+        var dictionary: [String : Any] = [:]
         
         for key in record.allKeys() {
-            let value = Utility.objectAsString(cloudObject: record, forKey: key)
-            dictionary[key] = value
+            let value = record.object(forKey: key)
+            if value == nil {
+                // No need to back up
+            } else if let date = value! as? Date {
+                dictionary[key] = ["date" : Utility.dateString(date, format: Config.backupDateFormat, localized: false)]
+            } else if let asset = value as? CKAsset {
+                if let data = try? Data.init(contentsOf: asset.fileURL) {
+                    let imageFileURL = assetsDirectory.appendingPathComponent(record.recordID.recordName).appendingPathExtension("jpeg")
+                    if (try? FileManager.default.removeItem(at: imageFileURL)) == nil {
+                        // Ignore
+                    }
+                    if let bits = NSImage(data: data as Data)!.representations.first as? NSBitmapImageRep {
+                        let data = bits.representation(using: .jpeg, properties: [:])
+                        do {
+                            if (try? data?.write(to: imageFileURL)) != nil {
+                                dictionary[key] = ["asset" : record.recordID.recordName]
+                                continue
+                            }
+                        }
+                    }
+                }
+                // Failed - just insert and will probably crash
+                dictionary[key] = value!
+            } else {
+                dictionary[key] = value!
+            }
         }
         guard let data = try? JSONSerialization.data(withJSONObject: dictionary) else {
             // error
@@ -339,4 +453,21 @@ class ICloud {
             }
         }
     }
+    
+    public func recordID(from record: CKRecord) -> CKRecord.ID {
+        var recordID = record.recordType
+        for column in Config.recordIdKeys[record.recordType]! {
+            recordID += "+"
+            let value = record.value(forKey: column)
+            if let date = value as? Date {
+                recordID += Utility.dateString(date, format: Config.recordIdDateFormat, localized: false)
+            } else if value == nil {
+                recordID += "NULL"
+            } else {
+                recordID += value as! String
+            }
+        }
+        return CKRecord.ID(recordName: recordID)
+    }
+    
 }

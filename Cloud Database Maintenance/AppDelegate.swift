@@ -16,6 +16,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     private var backupTitleMenuItem: NSMenuItem!
     public var backupDateMenuItem: NSMenuItem!
     public var backupMenuItem: NSMenuItem!
+    public var restoreMenuItem: NSMenuItem!
+    public var restoreStatusMenuItem: NSMenuItem!
     public var createLinksMenuItem: NSMenuItem!
     public var createLinksStatusMenuItem: NSMenuItem!
     public var emailToUUIDMenuItem: NSMenuItem!
@@ -30,6 +32,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     public var checkDuplicateParticipantsStatusMenuItem: NSMenuItem!
     private var databaseMaintenanceWindowController: NSWindowController!
     private var backupWindowController: NSWindowController!
+    private var restoreWindowController: NSWindowController!
     private var settingsWindowController: NSWindowController!
     private var timer: Timer!
     public var settings = Settings()
@@ -108,6 +111,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         
         self.backupTitleMenuItem = menu.addItem(withTitle: "Getting database...", action: nil, keyEquivalent: "")
         self.backupTitleMenuItem.isEnabled = false
+        menu.addItem(withTitle: "Quit", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         
         statusItem.menu = menu
     }
@@ -124,40 +128,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.backupDateMenuItem.isEnabled = false
         menu.addItem(NSMenuItem.separator())
         self.backupMenuItem = menu.addItem(withTitle: "Backup database", action: #selector(AppDelegate.backup(_:)), keyEquivalent: "B")
+        if self.database == "development" {
+            self.restoreMenuItem = menu.addItem(withTitle: "Restore database", action: #selector(AppDelegate.restore(_:)), keyEquivalent: "")
+            self.restoreStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+            self.restoreStatusMenuItem.isHidden = true
+        }
         menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         
         self.createLinksMenuItem = menu.addItem(withTitle: "Create links entries", action: #selector(AppDelegate.createLinks(_:)), keyEquivalent: "")
         self.createLinksStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.createLinksStatusMenuItem.isHidden = true
-        self.createLinksStatusMenuItem.isEnabled = false
         
         self.emailToUUIDMenuItem = menu.addItem(withTitle: "Convert email to UUID", action: #selector(AppDelegate.confirmEmailToUUID(_:)), keyEquivalent: "")
         self.emailToUUIDStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.emailToUUIDStatusMenuItem.isHidden = true
-        self.emailToUUIDStatusMenuItem.isEnabled = false
         
        self.clearPrivateSettingsMenuItem = menu.addItem(withTitle: "Clear private settings", action: #selector(AppDelegate.confirmClearPrivateSettings(_:)), keyEquivalent: "")
         self.clearPrivateSettingsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.clearPrivateSettingsStatusMenuItem.isHidden = true
-        self.clearPrivateSettingsStatusMenuItem.isEnabled = false
         
         self.createReadableRecordIDsMenuItem = menu.addItem(withTitle: "Create readable record IDs", action: #selector(AppDelegate.confirmCreateReadableRecordIDs(_:)), keyEquivalent: "")
         self.createReadableRecordIDsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.createReadableRecordIDsStatusMenuItem.isHidden = true
-        self.createReadableRecordIDsStatusMenuItem.isEnabled = false
         
         menu.addItem(NSMenuItem.separator())
         
         self.checkDuplicateGamesMenuItem = menu.addItem(withTitle: "Check duplicate games", action: #selector(AppDelegate.checkDuplicateGames(_:)), keyEquivalent: "")
         self.checkDuplicateGamesStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.checkDuplicateGamesStatusMenuItem.isHidden = true
-        self.checkDuplicateGamesStatusMenuItem.isEnabled = false
         
         self.checkDuplicateParticipantsMenuItem = menu.addItem(withTitle: "Check duplicate participants", action: #selector(AppDelegate.checkDuplicateParticipants(_:)), keyEquivalent: "")
         self.checkDuplicateParticipantsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.checkDuplicateParticipantsStatusMenuItem.isHidden = true
-        self.checkDuplicateParticipantsStatusMenuItem.isEnabled = false
 
         menu.addItem(NSMenuItem.separator())
         menu.addItem(withTitle: "Settings", action: #selector(AppDelegate.settings(_:)), keyEquivalent: "")
@@ -189,6 +192,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         
     @objc func backup(_ sender: Any?) {
         backupWindowController = self.showMenubarWindow(menubarWindowController: self.backupWindowController, windowIdentifier: "BackupWindow")
+    }
+    
+    @objc func restore(_ sender: Any?) {
+        self.restoreWindowController = self.showMenubarWindow(menubarWindowController: self.restoreWindowController, windowIdentifier: "RestoreWindow")
     }
     
     @objc func maintenance(_ sender: Any?) {

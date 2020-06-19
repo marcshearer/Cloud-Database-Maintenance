@@ -22,13 +22,7 @@ class CheckDuplicateParticipants {
         self.completion = completion
         
         iCloud.download(recordType: "Participants", downloadAction: { (record) in
-            
-            let date = record.value(forKey: "datePlayed") as! Date
-            let datePlayed = Utility.dateString(date, format: "yyyy-MM-dd", localized: false)
-            let email = record.value(forKey: "email")
-            let gameUUID = record.value(forKey: "gameUUID")
-            let recordID = "Games-\(datePlayed)-\(email!)-\(gameUUID!)"
-            recordIDs.append(recordID)
+            recordIDs.append(self.iCloud.recordID(from: record).recordName)
         }, completeAction: {
             recordIDs.sort()
             var lastID: String?

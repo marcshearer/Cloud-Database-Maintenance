@@ -13,7 +13,7 @@ class CreateLinks {
     
     public static let shared = CreateLinks()
     private let iCloud = ICloud()
-    private var links: [(fromPlayer: String, toPlayer: String)] = []
+    private var links: [(fromEmail: String, fromPlayerUUID: String, toPlayerUUID: String)] = []
     private var emails: [String:String] = [:]
     
     public func execute(completion: @escaping (String)->()) {
@@ -48,26 +48,27 @@ class CreateLinks {
             if !participants.isEmpty {
                 participants.sort(by: {$0.gameUUID < $1.gameUUID})
                 var lastGameUUID: String?
-                var gamePlayers: [String] = []
+                var gamePlayerUUIDs: [String] = []
                 for participant in participants {
                     if participant.gameUUID != lastGameUUID {
                         if lastGameUUID != nil {
-                            self.addLinks(gamePlayers)
+                            self.addLinks(gamePlayerUUIDs)
                         }
-                        gamePlayers = []
+                        gamePlayerUUIDs = []
                         lastGameUUID = participant.gameUUID
                     }
-                    gamePlayers.append(participant.player)
+                    gamePlayerUUIDs.append(participant.player)
                 }
-                if !gamePlayers.isEmpty {
-                    self.addLinks(gamePlayers)
+                if !gamePlayerUUIDs.isEmpty {
+                    self.addLinks(gamePlayerUUIDs)
                 }
             }
             
             for link in self.links {
-                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(link.fromPlayer)-\(link.toPlayer)"))
-                cloudObject.setValue(link.fromPlayer, forKey: "fromPlayer")
-                cloudObject.setValue(link.toPlayer, forKey: "toPlayer")
+                let cloudObject = CKRecord(recordType: "Links", recordID:  CKRecord.ID(recordName: "Links-\(link.fromEmail)-\(link.toPlayerUUID)"))
+                cloudObject.setValue(link.fromEmail, forKey: "fromEmail")
+                cloudObject.setValue(link.fromPlayerUUID, forKey: "fromPlayerUUID")
+                cloudObject.setValue(link.toPlayerUUID, forKey: "toPlayerUUID")
                 cloudObjectList.append(cloudObject)
             }
             
@@ -84,14 +85,13 @@ class CreateLinks {
         })
     }
     
-    private func addLinks(_ gamePlayers: [String]) {
-        for fromPlayer in gamePlayers {
-            if let fromEmail = emails[fromPlayer] {
-                for toPlayer in gamePlayers {
-                    if fromPlayer != toPlayer {
-                        if links.first(where: { $0.fromPlayer == fromEmail && $0.toPlayer == toPlayer }) == nil {
-                            links.append((fromPlayer: fromEmail, toPlayer: toPlayer))
-                        }
+    private func addLinks(_ gamePlayerUUIDs: [String]) {
+        for fromPlayerUUID in gamePlayerUUIDs {
+            if let fromEmail = emails[fromPlayerUUID] {
+                for toPlayerUUID in gamePlayerUUIDs {
+                    // Note these even creates a link for each player with themselves
+                    if links.first(where: { $0.fromEmail == fromEmail && $0.toPlayerUUID == toPlayerUUID }) == nil {
+                        links.append((fromEmail: fromEmail, fromPlayerUUID: fromPlayerUUID, toPlayerUUID: toPlayerUUID))
                     }
                 }
             } else {

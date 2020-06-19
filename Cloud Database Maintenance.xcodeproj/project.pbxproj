@@ -33,6 +33,8 @@
 		B284E5AA20D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */; };
 		B284E5B920D035E600A6466E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B284E5B820D035E600A6466E /* CloudKit.framework */; };
 		B284E5BD20D03B7000A6466E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5BC20D03B7000A6466E /* Utility.swift */; };
+		B2AE2AD6249B18D700CC280A /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AE2AD5249B18D700CC280A /* RestoreViewController.swift */; };
+		B2AE2AD8249B208300CC280A /* Restore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AE2AD7249B208300CC280A /* Restore.swift */; };
 		B2BE31C72275656900963B7B /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE31C62275656900963B7B /* String Extensions.swift */; };
 /* End PBXBuildFile section */
 
@@ -87,6 +89,8 @@
 		B284E5AB20D02B7700A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B284E5B820D035E600A6466E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B284E5BC20D03B7000A6466E /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		B2AE2AD5249B18D700CC280A /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
+		B2AE2AD7249B208300CC280A /* Restore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restore.swift; sourceTree = "<group>"; };
 		B2BE31C62275656900963B7B /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -151,6 +155,8 @@
 				B221EEF6210C471300F7FBA0 /* CloudTableViewer.swift */,
 				B2574FE52104942500C3FE40 /* BackupViewController.swift */,
 				B221EEFA210C5F2300F7FBA0 /* Backup.swift */,
+				B2AE2AD5249B18D700CC280A /* RestoreViewController.swift */,
+				B2AE2AD7249B208300CC280A /* Restore.swift */,
 				B23610422494B3F300AFE779 /* EmailToUUID.swift */,
 				B2641C942487C39C00FC6BB4 /* CreateLinks.swift */,
 				B23610442494B53900AFE779 /* ClearPrivateSettings.swift */,
@@ -344,6 +350,7 @@
 				B221EEFD210DEFBB00F7FBA0 /* SettingsViewController.swift in Sources */,
 				B265304921062FC400B97813 /* MenubarWindowController.swift in Sources */,
 				B23610472494DCF600AFE779 /* ReadableRecordIDs.swift in Sources */,
+				B2AE2AD6249B18D700CC280A /* RestoreViewController.swift in Sources */,
 				B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */,
 				B2347ABC21048761001F3E42 /* iCloud.swift in Sources */,
 				B2BE31C72275656900963B7B /* String Extensions.swift in Sources */,
@@ -352,6 +359,7 @@
 				B221EEF7210C471300F7FBA0 /* CloudTableViewer.swift in Sources */,
 				B221EEFB210C5F2300F7FBA0 /* Backup.swift in Sources */,
 				B23610432494B3F300AFE779 /* EmailToUUID.swift in Sources */,
+				B2AE2AD8249B208300CC280A /* Restore.swift in Sources */,
 				B23610452494B53900AFE779 /* ClearPrivateSettings.swift in Sources */,
 				B2641C972487C7D700FC6BB4 /* Config.swift in Sources */,
 				B221EEF9210C514A00F7FBA0 /* MenuBar.swift in Sources */,
