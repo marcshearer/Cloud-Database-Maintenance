@@ -71,7 +71,7 @@ class SettingsViewController: NSViewController {
         wakeupIntervalTextField.formatter = IntegerValueFormatter(maxValue: 24)
         
         if firstTime {
-            self.editSettings = Utility.appDelegate!.settings.copy() as! Settings
+            self.editSettings = Utility.appDelegate!.settings.copy() as? Settings
             self.reflectValues()
             self.checkValues()
             firstTime = true

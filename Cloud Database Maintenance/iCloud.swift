@@ -76,7 +76,7 @@ class ICloud {
                 
                 if cursor != nil && !self.cancelRequest && (resultsLimit == nil || rowsRead < resultsLimit) {
                     // More to come - recurse
-                    _ = self.download(recordType: recordType,
+                    self.download(recordType: recordType,
                                       database: database,
                                       keys: keys,
                                       sortKey: sortKey,
@@ -126,6 +126,9 @@ class ICloud {
                                 // Limit exceeded - start at 400 and then split in two and try again
                                 lastSplit = self.updatePortion(database: database, requireLess: true, lastSplit: lastSplit, records: records, recordIDsToDelete: recordIDsToDelete, recordsRemainder: recordsRemainder, recordIDsToDeleteRemainder: recordIDsToDeleteRemainder, completion: completion)
                             } else if error.code == .partialFailure {
+                                /*if let dictionary = error.userInfo[CKPartialErrorsByItemIDKey] as? NSDictionary {
+                                    print("partialErrors \(dictionary)")
+                                }*/
                                 completion?(error)
                             } else {
                                 completion?(error)
@@ -223,7 +226,7 @@ class ICloud {
         
         if let fileHandle = openFile(directory: directory, recordType: recordType) {
             self.writeString(fileHandle: fileHandle, string: "{ \"\(groupName)\" : [\n")
-            _ = self.download(recordType: recordType,
+            self.download(recordType: recordType,
                               sortKey: sortKey,
                               sortAscending: sortAscending,
                               downloadAction: { (record) in
@@ -257,57 +260,58 @@ class ICloud {
     public func restore(directory: URL, assetsDirectory: URL, recordType: String, groupName: String, elementName: String, completion: @escaping (Bool, String)->()) {
         var records: [CKRecord] = []
         
-        let fileURL = directory.appendingPathComponent("\(recordType).json")
-        do {
-            let fileContents = try Data(contentsOf: fileURL, options: [])
-            let fileDictionary = try JSONSerialization.jsonObject(with: fileContents, options: []) as! [String:Any?]
-            let contents = fileDictionary[groupName] as! [[String:Any?]]
-            
-            for record in contents {
-                let keys = record[elementName] as! [String:Any]
+        self.initialise(recordType: recordType) { (error) in
+            let fileURL = directory.appendingPathComponent("\(recordType).json")
+            do {
+                let fileContents = try Data(contentsOf: fileURL, options: [])
+                let fileDictionary = try JSONSerialization.jsonObject(with: fileContents, options: []) as! [String:Any?]
+                let contents = fileDictionary[groupName] as! [[String:Any?]]
                 
-                // Construct record ID
-                var recordID = recordType
-                for column in Config.recordIdKeys[recordType]! {
-                    recordID += "+"
-                    let value = self.value(forKey: column, keys: keys, assetsDirectory: assetsDirectory)
-                    if let date = value as? Date {
-                        recordID += Utility.dateString(date, format: Config.recordIdDateFormat, localized: false)
-                    } else if value == nil {
-                        if column.right(10).lowercased() == "playeruuid" {
-                            // Might not have them yet - TODO remove after go live
-                            recordID += UUID().uuidString
+                for record in contents {
+                    let keys = record[elementName] as! [String:Any]
+                    
+                    // Construct record ID
+                    var recordID = recordType
+                    for column in Config.recordIdKeys[recordType]! {
+                        recordID += "+"
+                        let value = self.value(forKey: column, keys: keys, assetsDirectory: assetsDirectory)
+                        if let date = value as? Date {
+                            recordID += Utility.dateString(date, format: Config.recordIdDateFormat, localized: false)
+                        } else if value == nil {
+                            if column.right(10).lowercased() == "playeruuid" {
+                                // Might not have them yet - TODO remove after go live
+                                recordID += UUID().uuidString
+                            } else {
+                                recordID += "NULL"
+                            }
                         } else {
-                            recordID += "NULL"
-                        }
-                    } else {
-                        recordID += value as! String
-                    }
-                }
-                
-                var errors = false
-                let cloudObject = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordID))
-                for (keyName, _) in keys {
-                    if recordType == "Version" && keyName == "database" {
-                        // Database flag - do not overwrite
-                    } else {
-                        if let actualValue = self.value(forKey: keyName, keys: keys, assetsDirectory: assetsDirectory) {
-                            cloudObject.setValue(actualValue, forKey: keyName)
-                        } else {
-                            completion(false, "Error in \(recordType) - Invalid key value for \(keyName) in \(recordID)")
-                            errors = true
-                            break
+                            recordID += value as! String
                         }
                     }
+                    
+                    var errors = false
+                    let cloudObject = CKRecord(recordType: recordType, recordID: CKRecord.ID(recordName: recordID))
+                    for (keyName, _) in keys {
+                        if recordType == "Version" && keyName == "database" {
+                            // Database flag - do not overwrite
+                            cloudObject.setValue(Utility.appDelegate!.database, forKey: keyName)
+                        } else {
+                            if let actualValue = self.value(forKey: keyName, keys: keys, assetsDirectory: assetsDirectory) {
+                                cloudObject.setValue(actualValue, forKey: keyName)
+                            } else {
+                                completion(false, "Error in \(recordType) - Invalid key value for \(keyName) in \(recordID)")
+                                errors = true
+                                break
+                            }
+                        }
+                    }
+                    if errors {
+                        break
+                    } else {
+                        records.append(cloudObject)
+                    }
                 }
-                if errors {
-                    break
-                } else {
-                    records.append(cloudObject)
-                }
-            }
-            if !records.isEmpty {
-                self.initialise(recordType: recordType) { (error) in
+                if !records.isEmpty {
                     Utility.mainThread {
                         if error != nil {
                             completion(false, self.errorMessage(error))
@@ -323,12 +327,12 @@ class ICloud {
                             }
                         }
                     }
+                } else {
+                    completion(true, "No records to update")
                 }
-            } else {
-                completion(true, "No records to update")
+            } catch let error as NSError {
+                completion(false, "Error opening \(recordType) in backup \(error.localizedDescription)")
             }
-        } catch let error as NSError {
-            completion(false, "Error opening \(recordType) in backup \(error.localizedDescription)")
         }
     }
     
@@ -374,7 +378,7 @@ class ICloud {
     public func getDatabaseIdentifier(completion: @escaping (Bool, String?, String?)->()) {
         var database: String!
         
-        _ = self.download(recordType: "Version",
+        self.download(recordType: "Version",
                           downloadAction: { (record) in
                                 database = Utility.objectString(cloudObject: record, forKey: "database")
                           },

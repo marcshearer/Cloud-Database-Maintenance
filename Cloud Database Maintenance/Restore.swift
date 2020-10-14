@@ -28,6 +28,8 @@ class Restore {
         self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
         self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
         self.addTable(recordType: "Links", groupName: "links", elementName: "link")
+        self.addTable(recordType: "Awards", groupName: "awards", elementName: "award")
+        self.addTable(recordType: "Terms", groupName: "terms", elementName: "terms")
         
         self.restoreNext(count: 0,
                          directory: directory,

@@ -39,7 +39,7 @@ class CreateLinks {
         self.iCloud.download(recordType: "Participants", downloadAction: { (record) in
             if let player = record.value(forKey: "playerUUID") as? String,
                 let gameUUID = record.value(forKey: "gameUUID") as? String {
-                participants.append((player: player, gameUUID: gameUUID))
+                participants.append((gameUUID: gameUUID, player: player))
             }
         },
         completeAction: {

@@ -22,15 +22,17 @@ class Backup {
         self.errors = false
         self.dateString = Utility.dateString(Date(), format: Config.backupDirectoryDateFormat, localized: false)
         
-        self.addTable(recordType: "Players", groupName: "players", elementName:  "player", sortKey: ["name"], sortAscending: true)
-        self.addTable(recordType: "Games", groupName: "games", elementName:  "game", sortKey: ["datePlayed"], sortAscending: false)
-        self.addTable(recordType: "Participants", groupName: "participants", elementName:  "participant", sortKey: ["datePlayed", "totalScore"], sortAscending: false)
-        self.addTable(recordType: "Invites", groupName: "invites", elementName:  "invite")
-        self.addTable(recordType: "Notifications", groupName: "notifications", elementName:  "notification")
-        self.addTable(recordType: "Version", groupName: "versions", elementName:  "version")
-        if Utility.appDelegate!.database == "Development" {
+        self.addTable(recordType: "Players",        groupName: "players",       elementName:  "player",         sortKey: ["name"], sortAscending: true)
+        self.addTable(recordType: "Games",          groupName: "games",         elementName:  "game",           sortKey: ["datePlayed"], sortAscending: false)
+        self.addTable(recordType: "Participants",   groupName: "participants",  elementName:  "participant",    sortKey: ["datePlayed", "totalScore"], sortAscending: false)
+        self.addTable(recordType: "Invites",        groupName: "invites",       elementName:  "invite")
+        self.addTable(recordType: "Notifications",  groupName: "notifications", elementName:  "notification")
+        self.addTable(recordType: "Version",        groupName: "versions",      elementName:  "version")
+        if Utility.appDelegate!.database == "development" {
                // TODO Remove condition once live
-            self.addTable(recordType: "Links", groupName: "links", elementName: "link")
+            self.addTable(recordType: "Awards",     groupName: "awards",        elementName:  "award",          sortKey: ["playerUUID", "code", "awardLevel"], sortAscending: true)
+            self.addTable(recordType: "Links",      groupName: "links",         elementName: "link")
+            self.addTable(recordType: "Terms",      groupName: "terms",         elementName: "terms")
         }
          
         self.backupNext(count: 0,

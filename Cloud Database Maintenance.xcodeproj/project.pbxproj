@@ -33,6 +33,7 @@
 		B284E5AA20D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5A920D02B7700A6466E /* Cloud_Database_MaintenanceUITests.swift */; };
 		B284E5B920D035E600A6466E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B284E5B820D035E600A6466E /* CloudKit.framework */; };
 		B284E5BD20D03B7000A6466E /* Utility.swift in Sources */ = {isa = PBXBuildFile; fileRef = B284E5BC20D03B7000A6466E /* Utility.swift */; };
+		B288F8B624C838AB00749536 /* ClearAwards.swift in Sources */ = {isa = PBXBuildFile; fileRef = B288F8B524C838AB00749536 /* ClearAwards.swift */; };
 		B2AE2AD6249B18D700CC280A /* RestoreViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AE2AD5249B18D700CC280A /* RestoreViewController.swift */; };
 		B2AE2AD8249B208300CC280A /* Restore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2AE2AD7249B208300CC280A /* Restore.swift */; };
 		B2BE31C72275656900963B7B /* String Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2BE31C62275656900963B7B /* String Extensions.swift */; };
@@ -89,6 +90,7 @@
 		B284E5AB20D02B7700A6466E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B284E5B820D035E600A6466E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		B284E5BC20D03B7000A6466E /* Utility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utility.swift; sourceTree = "<group>"; };
+		B288F8B524C838AB00749536 /* ClearAwards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClearAwards.swift; sourceTree = "<group>"; };
 		B2AE2AD5249B18D700CC280A /* RestoreViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreViewController.swift; sourceTree = "<group>"; };
 		B2AE2AD7249B208300CC280A /* Restore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Restore.swift; sourceTree = "<group>"; };
 		B2BE31C62275656900963B7B /* String Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String Extensions.swift"; sourceTree = "<group>"; };
@@ -159,8 +161,9 @@
 				B2AE2AD7249B208300CC280A /* Restore.swift */,
 				B23610422494B3F300AFE779 /* EmailToUUID.swift */,
 				B2641C942487C39C00FC6BB4 /* CreateLinks.swift */,
-				B23610442494B53900AFE779 /* ClearPrivateSettings.swift */,
 				B23610462494DCF600AFE779 /* ReadableRecordIDs.swift */,
+				B23610442494B53900AFE779 /* ClearPrivateSettings.swift */,
+				B288F8B524C838AB00749536 /* ClearAwards.swift */,
 				B21153E32495DE430009EA6E /* CheckDuplicateGames.swift */,
 				B21153E52495E0E40009EA6E /* CheckDuplicateParticipants.swift */,
 				B221EEFC210DEFBB00F7FBA0 /* SettingsViewController.swift */,
@@ -265,7 +268,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "Marc Shearer";
 				TargetAttributes = {
 					B284E58420D02B7400A6466E = {
@@ -354,6 +357,7 @@
 				B2574FE62104942500C3FE40 /* BackupViewController.swift in Sources */,
 				B2347ABC21048761001F3E42 /* iCloud.swift in Sources */,
 				B2BE31C72275656900963B7B /* String Extensions.swift in Sources */,
+				B288F8B624C838AB00749536 /* ClearAwards.swift in Sources */,
 				B221EEFF210DF3C100F7FBA0 /* Settings.swift in Sources */,
 				B284E58E20D02B7400A6466E /* Cloud_Database_Maintenance.xcdatamodeld in Sources */,
 				B221EEF7210C471300F7FBA0 /* CloudTableViewer.swift in Sources */,
@@ -436,6 +440,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -496,6 +501,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -528,6 +534,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
@@ -547,6 +554,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 3T7CT2S464;

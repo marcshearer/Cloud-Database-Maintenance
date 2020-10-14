@@ -11,10 +11,11 @@ import Foundation
 class Config {
     
     // iCloud database identifer
-    public static let iCloudIdentifier = "iCloud.MarcShearer.Contract-Whist-Scorecard"
+    public static let iCloudIdentifier = "iCloud.MarcShearer.Whist"
     
     // Columns for record IDs
-    public static let recordIdKeys = ["Games"           : ["datePlayed", "deviceName", "gameUUID"],
+    public static let recordIdKeys = ["Awards"          : ["playerUUID", "code", "awardLevel"],
+                                      "Games"           : ["datePlayed", "deviceName", "gameUUID"],
                                       "Invites"         : ["hostName", "hostPlayerUUID", "invitePlayerUUID", "inviteUUID"],
                                       "Links"           : ["fromPlayer", "toPlayer"],
                                       "Notifications"   : ["playerUUID"],

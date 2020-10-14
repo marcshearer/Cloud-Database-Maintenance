@@ -24,6 +24,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     public var emailToUUIDStatusMenuItem: NSMenuItem!
     public var clearPrivateSettingsMenuItem: NSMenuItem!
     public var clearPrivateSettingsStatusMenuItem: NSMenuItem!
+    public var clearAwardsMenuItem: NSMenuItem!
+    public var clearAwardsStatusMenuItem: NSMenuItem!
     public var createReadableRecordIDsMenuItem: NSMenuItem!
     public var createReadableRecordIDsStatusMenuItem: NSMenuItem!
     public var checkDuplicateGamesMenuItem: NSMenuItem!
@@ -144,16 +146,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.emailToUUIDStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.emailToUUIDStatusMenuItem.isHidden = true
         
-       self.clearPrivateSettingsMenuItem = menu.addItem(withTitle: "Clear private settings", action: #selector(AppDelegate.confirmClearPrivateSettings(_:)), keyEquivalent: "")
-        self.clearPrivateSettingsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
-        self.clearPrivateSettingsStatusMenuItem.isHidden = true
-        
         self.createReadableRecordIDsMenuItem = menu.addItem(withTitle: "Create readable record IDs", action: #selector(AppDelegate.confirmCreateReadableRecordIDs(_:)), keyEquivalent: "")
         self.createReadableRecordIDsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.createReadableRecordIDsStatusMenuItem.isHidden = true
+
+        menu.addItem(NSMenuItem.separator())
+
+        self.clearPrivateSettingsMenuItem = menu.addItem(withTitle: "Clear private settings", action: #selector(AppDelegate.confirmClearPrivateSettings(_:)), keyEquivalent: "")
+         self.clearPrivateSettingsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+         self.clearPrivateSettingsStatusMenuItem.isHidden = true
+        
+        if self.database == "development" {
+            self.clearAwardsMenuItem = menu.addItem(withTitle: "Clear awards", action: #selector(AppDelegate.confirmClearAwards(_:)), keyEquivalent: "")
+            self.clearAwardsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
+            self.clearAwardsStatusMenuItem.isHidden = true
+        }
         
         menu.addItem(NSMenuItem.separator())
-        
+
         self.checkDuplicateGamesMenuItem = menu.addItem(withTitle: "Check duplicate games", action: #selector(AppDelegate.checkDuplicateGames(_:)), keyEquivalent: "")
         self.checkDuplicateGamesStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.checkDuplicateGamesStatusMenuItem.isHidden = true
@@ -268,6 +278,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Utility.mainThread {
             ClearPrivateSettings.shared.execute { message in
                 self.resetClearPrivateSettings(message)
+            }
+        }
+    }
+    
+    @objc func confirmClearAwards(_ sender: Any?) {
+        self.popupConfirm(title: "Confirm (irreversible) clear awards", action: #selector(AppDelegate.clearAwards(_:)), cancelAction: #selector(AppDelegate.resetClearAwards(_:)))
+    }
+    
+    @objc func resetClearAwards(_ sender: Any?) {
+        self.clearAwardsMenuItem.title = "Clear awards"
+        self.clearAwardsMenuItem.isEnabled = true
+        if let message = sender as? String {
+            self.clearAwardsStatusMenuItem.title = "   Last status: \(message)"
+            self.clearAwardsStatusMenuItem.isHidden = false
+            self.showStatus(option: "Clear awards", status: message)
+        } else {
+            self.clearAwardsStatusMenuItem.isHidden = true
+        }
+    }
+    
+    @objc func clearAwards(_ sender: Any?) {
+        self.clearAwardsMenuItem.title = "Clearing awards..."
+        self.clearAwardsMenuItem.isEnabled = false
+        Utility.mainThread {
+            ClearAwards.shared.execute { message in
+                self.resetClearAwards(message)
             }
         }
     }

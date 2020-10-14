@@ -18,6 +18,8 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     private var notificationsLayout: [Layout]!
     private var versionLayout: [Layout]!
     private var linksLayout: [Layout]!
+    private var awardsLayout: [Layout]!
+    private var termsLayout: [Layout]!
     private var tableViewer: CloudTableViewer!
     private var firstTime = true
     private var emails: [String:String] = [:]
@@ -77,7 +79,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
     }
     
     internal func numberOfRows(in tableView: NSTableView) -> Int {
-        return 7
+        return 9
     }
     
     internal func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
@@ -102,6 +104,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         case 4:
             self.tableViewer.show(recordType: "Notifications",
                                   layout: self.notificationsLayout,
+                                  sortKey: "playerUUID",
                                   sortAscending: false)
         case 5:
             self.tableViewer.show(recordType: "Version",
@@ -111,6 +114,16 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
             self.tableViewer.show(recordType: "Links",
                                   layout: self.linksLayout,
                                   sortAscending: false)
+        case 7:
+            self.tableViewer.show(recordType: "Awards",
+                                  layout: self.awardsLayout,
+                                  sortAscending: true)
+            
+        case 8:
+            self.tableViewer.show(recordType: "Terms",
+                                  layout: self.termsLayout,
+                                  sortKey: "userId",
+                                  sortAscending: true)
         default:
             break
         }
@@ -152,6 +165,10 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
             table = "Version"
         case 6:
             table = "Links"
+        case 7:
+            table = "Awards"
+        case 8:
+            table = "Terms"
         default:
             table = ""
         }
@@ -166,8 +183,8 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         
         switch recordType {
         case "Players":
-            if let email = Utility.objectString(cloudObject: record, forKey: "email") {
-                let predicate = NSPredicate(format: "email = %@", email)
+            if let email = Utility.objectString(cloudObject: record, forKey: "playerUUID") {
+                let predicate = NSPredicate(format: "playerUUID = %@", email)
                 self.tableViewer.show(recordType: "Participants", layout: self.participantsLayout, sortAscending: false, predicate: predicate)
                 self.tableList.deselectAll(self)
                 result = true
@@ -279,9 +296,20 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
 
         linksLayout =
             [ Layout(key: "fromEmail",          title: "From email",    width: -100,    alignment: .left,   type: .string,      total: false),
-              Layout(key: "!toPlayerUUID",      title: "To email",      width: -100,    alignment: .left,   type: .string,    total: false),
-              Layout(key: "fromPlayerUUID",     title: "From UUID",     width: -100,    alignment: .left,   type: .string,    total: false),
-              Layout(key: "toPlayerUUID",       title: "To UUID",       width: -100,    alignment: .left,   type: .string,    total: false)]
+              Layout(key: "!toPlayerUUID",      title: "To email",      width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "fromPlayerUUID",     title: "From UUID",     width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "toPlayerUUID",       title: "To UUID",       width: -100,    alignment: .left,   type: .string,      total: false)]
+        
+        awardsLayout =
+            [ Layout(key: "!playerUUID",        title: "Email",         width: -120,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "code",               title: "Code",          width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "awardLevel",         title: "Award level",   width: 100,     alignment: .right,  type: .int,         total: false),
+              Layout(key: "count",              title: "Count",         width: 50,      alignment: .right,  type: .int,         total: false),
+              Layout(key: "dateAwarded",        title: "Awarded",       width: 150,     alignment: .center, type: .dateTime,   total: false)]
+        
+        termsLayout =
+            [ Layout(key: "deviceName",         title: "Device",        width: -120,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "userId",             title: "User ID",       width: -100,    alignment: .left,   type: .string,      total: false),
+              Layout(key: "dateAccepted",       title: "Accepted",      width: 150,     alignment: .center, type: .dateTime,    total: false)]
     }
-    
 }
