@@ -192,7 +192,7 @@ class Utility {
         
         if let image = cloudObject.object(forKey: forKey) {
             let imageAsset = image as! CKAsset
-            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL) {
+            if let imageData = try? Data.init(contentsOf: imageAsset.fileURL!) {
                 result = imageData as NSData?
             }
         }
@@ -313,7 +313,7 @@ class Utility {
         }
     }
     
-    public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryCursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
+    public static func getCloudRecordCount(_ table: String, predicate: NSPredicate? = nil, cursor: CKQueryOperation.Cursor? = nil, runningTotal: Int! = nil, completion: ((Int?)->())? = nil) {
         // Fetch data from cloud
         var queryOperation: CKQueryOperation
         let cloudContainer = CKContainer.default()

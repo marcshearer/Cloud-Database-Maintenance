@@ -68,7 +68,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
     
     public var delegate: CloudTableViewerDelegate?
     
-    override func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
+    func validateMenuItem(_ menuItem: NSMenuItem) -> Bool {
         return true
     }
     
@@ -149,7 +149,7 @@ class CloudTableViewer : NSObject, NSTableViewDataSource, NSTableViewDelegate {
         }
         self.setBusy(true)
         
-        _ = self.iCloud.download(recordType: self.current.recordType,
+        self.iCloud.download(recordType: self.current.recordType,
                                  keys: keys,
                                  sortKey: [self.current.sortKey],
                                  sortAscending: self.current.sortAscending,

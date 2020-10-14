@@ -43,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
          if let button = self.statusItem.button {
-            button.image = NSImage(named:NSImage.Name("unknown"))
+            button.image = NSImage(named:"unknown")
         }
         dummyMenu()
         
@@ -66,11 +66,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Update menu bar image
                     if let button = self.statusItem.button {
                         if self.database == "production" {
-                            button.image = NSImage(named:NSImage.Name("spade"))
+                            button.image = NSImage(named:"spade")
                         } else if self.database == "development" {
-                            button.image = NSImage(named:NSImage.Name("diamond"))
+                            button.image = NSImage(named:"diamond")
                         } else {
-                            button.image = NSImage(named:NSImage.Name("unknown"))
+                            button.image = NSImage(named:"unknown")
                         }
                     }
                     
@@ -183,7 +183,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let menu = NSMenu()
         menu.addItem(withTitle: title, action: action, keyEquivalent: "")
         menu.addItem(withTitle: "Cancel", action: cancelAction, keyEquivalent: "")
-        NSSound(named: NSSound.Name(rawValue: "Submarine"))?.play()
+        NSSound(named: "Submarine")?.play()
         self.statusItem.popUpMenu(menu)
     }
     
@@ -191,7 +191,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         Utility.mainThread {
             let menu = NSMenu()
             menu.addItem(withTitle: "\(option) completion: \(status)", action: #selector(AppDelegate.doNothing(_:)), keyEquivalent: "")
-            NSSound(named: NSSound.Name(rawValue: "Frog"))?.play()
+            NSSound(named: "Frog")?.play()
             self.statusItem.popUpMenu(menu)
         }
     }
@@ -376,8 +376,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         var returnedWindowController: NSWindowController!
         
         if menubarWindowController == nil {
-            let mainStoryboard = NSStoryboard(name: NSStoryboard.Name(rawValue: "Main"), bundle: nil)
-            let menubarWindowIdentifier = NSStoryboard.SceneIdentifier(rawValue: windowIdentifier)
+            let mainStoryboard = NSStoryboard(name: "Main", bundle: nil)
+            let menubarWindowIdentifier = windowIdentifier
             returnedWindowController = mainStoryboard.instantiateController(withIdentifier: menubarWindowIdentifier) as? NSWindowController
         } else {
             returnedWindowController = menubarWindowController

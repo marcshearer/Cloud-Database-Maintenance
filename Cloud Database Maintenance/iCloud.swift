@@ -28,7 +28,7 @@ class ICloud {
                          downloadAction: ((CKRecord) -> ())? = nil,
                          completeAction: (() -> ())? = nil,
                          failureAction:  ((Error?) -> ())? = nil,
-                         cursor: CKQueryCursor! = nil,
+                         cursor: CKQueryOperation.Cursor! = nil,
                          rowsRead: Int = 0) {
         
         var queryOperation: CKQueryOperation
@@ -200,7 +200,7 @@ class ICloud {
     }
 
     public func initialise(recordType: String, database: CKDatabase? = nil, completion: @escaping (Error?)->()) {
-        var recordIDsToDelete: [CKRecordID] = []
+        var recordIDsToDelete: [CKRecord.ID] = []
         
         let cloudContainer = CKContainer.init(identifier: Config.iCloudIdentifier)
         let publicDatabase = cloudContainer.publicCloudDatabase
@@ -412,7 +412,7 @@ class ICloud {
             } else if let date = value! as? Date {
                 dictionary[key] = ["date" : Utility.dateString(date, format: Config.backupDateFormat, localized: false)]
             } else if let asset = value as? CKAsset {
-                if let data = try? Data.init(contentsOf: asset.fileURL) {
+                if let data = try? Data.init(contentsOf: asset.fileURL!) {
                     let imageFileURL = assetsDirectory.appendingPathComponent(record.recordID.recordName).appendingPathExtension("jpeg")
                     if (try? FileManager.default.removeItem(at: imageFileURL)) == nil {
                         // Ignore
@@ -420,7 +420,7 @@ class ICloud {
                     if let bits = NSImage(data: data as Data)!.representations.first as? NSBitmapImageRep {
                         let data = bits.representation(using: .jpeg, properties: [:])
                         do {
-                            if (try? data?.write(to: imageFileURL)) != nil {
+                            if (((try? data?.write(to: imageFileURL)) as ()??)) != nil {
                                 dictionary[key] = ["asset" : record.recordID.recordName]
                                 continue
                             }

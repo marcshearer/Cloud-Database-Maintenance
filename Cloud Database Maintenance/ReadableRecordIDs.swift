@@ -55,7 +55,7 @@ class ReadableRecordIDs {
             cloudObjectList.append(record)
         },
         completeAction: {
-            var recordIDsToDelete: [CKRecordID] = []
+            var recordIDsToDelete: [CKRecord.ID] = []
             var recordsToSave: [CKRecord] = []
 
             for cloudObject in cloudObjectList {

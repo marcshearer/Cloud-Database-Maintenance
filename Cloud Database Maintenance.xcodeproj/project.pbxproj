@@ -273,6 +273,7 @@
 				TargetAttributes = {
 					B284E58420D02B7400A6466E = {
 						CreatedOnToolsVersion = 9.4;
+						LastSwiftMigration = 1200;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -534,7 +535,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
@@ -545,7 +546,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-Maintenance";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
@@ -554,7 +555,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Cloud Database Maintenance/Cloud_Database_Maintenance.entitlements";
-				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 3T7CT2S464;
@@ -565,7 +566,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "MarcShearer.Cloud-Database-Maintenance";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
