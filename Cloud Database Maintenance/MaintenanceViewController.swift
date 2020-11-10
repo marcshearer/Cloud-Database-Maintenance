@@ -239,7 +239,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
         ]
         
         gamesLayout =
-            [ Layout(key: "datePlayed",         title: "Last played",   width: 75,      alignment: .center, type: .date,        total: false),
+            [ Layout(key: "datePlayed",         title: "Last played",   width: 140,      alignment: .center, type: .dateTime,        total: false),
               Layout(key: "deviceName",         title: "Device",        width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "location",           title: "Location",      width: -100,    alignment: .left,   type: .string,      total: false),
               Layout(key: "recordID",           title: "Record ID",     width: -150,    alignment: .left,   type: .string,      total: false),
@@ -251,7 +251,7 @@ class MaintenanceViewController: NSViewController, NSTableViewDataSource, NSTabl
               Layout(key: "deviceUUID",         title: "Device ID",     width: -150,    alignment: .left,   type: .string,      total: false) ]
 
         participantsLayout =
-            [ Layout(key: "datePlayed",         title: "Last played",   width: 75,      alignment: .center, type: .date,        total: false),
+            [ Layout(key: "datePlayed",         title: "Last played",   width: 140,      alignment: .center, type: .dateTime,        total: false),
               Layout(key: "name",               title: "Name",          width: 80,      alignment: .left,   type: .string,      total: false),
               Layout(key: "!playerUUID",        title: "Email",         width: -150,    alignment: .left,   type: .string,      total: false),
               Layout(key: "recordID",           title: "RecordID",      width: -150,    alignment: .left,   type: .string,      total: false),

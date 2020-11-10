@@ -225,6 +225,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 self.createLinksMenuItem.isEnabled = true
                 self.createLinksStatusMenuItem.title = "   Last status: \(message)"
                 self.createLinksStatusMenuItem.isHidden = false
+                self.createLinksStatusMenuItem.isEnabled = false
                 self.showStatus(option: "Create links entries", status: message)
             }
         }
@@ -250,6 +251,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let message = sender as? String {
             self.emailToUUIDStatusMenuItem.title = "   Last status: \(message)"
             self.emailToUUIDStatusMenuItem.isHidden = false
+            self.emailToUUIDStatusMenuItem.isEnabled = false
             self.showStatus(option: "Convert email to UUID", status: message)
         } else {
             self.emailToUUIDStatusMenuItem.isHidden = true
@@ -266,6 +268,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let message = sender as? String {
             self.clearPrivateSettingsStatusMenuItem.title = "   Last status: \(message)"
             self.clearPrivateSettingsStatusMenuItem.isHidden = false
+            self.clearPrivateSettingsStatusMenuItem.isEnabled = false
             self.showStatus(option: "Clear private settings", status: message)
         } else {
             self.clearPrivateSettingsStatusMenuItem.isHidden = true
@@ -292,6 +295,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let message = sender as? String {
             self.clearAwardsStatusMenuItem.title = "   Last status: \(message)"
             self.clearAwardsStatusMenuItem.isHidden = false
+            self.clearAwardsStatusMenuItem.isEnabled = false
             self.showStatus(option: "Clear awards", status: message)
         } else {
             self.clearAwardsStatusMenuItem.isHidden = true
@@ -328,6 +332,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let message = sender as? String {
             self.createReadableRecordIDsStatusMenuItem.title = "   Last status: \(message)"
             self.createReadableRecordIDsStatusMenuItem.isHidden = false
+            self.createReadableRecordIDsStatusMenuItem.isEnabled = false
+            
             self.showStatus(option: "Create readable Record IDs", status: message)
         } else {
             self.createReadableRecordIDsStatusMenuItem.isHidden = true
@@ -343,6 +349,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 self.checkDuplicateGamesMenuItem.isEnabled = true
                 self.checkDuplicateGamesStatusMenuItem.title = "   Last status: \(message)"
                 self.checkDuplicateGamesStatusMenuItem.isHidden = false
+                self.checkDuplicateGamesStatusMenuItem.isEnabled = false
                 self.showStatus(option: "Check duplicate games", status: message)
             }
         }
@@ -357,6 +364,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 self.checkDuplicateParticipantsMenuItem.isEnabled = true
                 self.checkDuplicateParticipantsStatusMenuItem.title = "   Last status: \(message)"
                 self.checkDuplicateParticipantsStatusMenuItem.isHidden = false
+                self.checkDuplicateParticipantsStatusMenuItem.isEnabled = false
                 self.showStatus(option: "Check duplicate participants", status: message)
             }
         }

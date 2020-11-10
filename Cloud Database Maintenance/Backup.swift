@@ -28,12 +28,9 @@ class Backup {
         self.addTable(recordType: "Invites",        groupName: "invites",       elementName:  "invite")
         self.addTable(recordType: "Notifications",  groupName: "notifications", elementName:  "notification")
         self.addTable(recordType: "Version",        groupName: "versions",      elementName:  "version")
-        if Utility.appDelegate!.database == "development" {
-               // TODO Remove condition once live
-            self.addTable(recordType: "Awards",     groupName: "awards",        elementName:  "award",          sortKey: ["playerUUID", "code", "awardLevel"], sortAscending: true)
-            self.addTable(recordType: "Links",      groupName: "links",         elementName: "link")
-            self.addTable(recordType: "Terms",      groupName: "terms",         elementName: "terms")
-        }
+        self.addTable(recordType: "Awards",     groupName: "awards",        elementName:  "award",          sortKey: ["playerUUID", "code", "awardLevel"], sortAscending: true)
+        self.addTable(recordType: "Links",      groupName: "links",         elementName: "link")
+        self.addTable(recordType: "Terms",      groupName: "terms",         elementName: "terms")
          
         self.backupNext(count: 0,
                         resetMessage: resetMessage,
