@@ -11,7 +11,7 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
-    private let statusItem = NSStatusBar.system.statusItem(withLength:NSStatusItem.squareLength)
+    private let statusItem = NSStatusBar.system.statusItem(withLength: 15)
     
     private var backupTitleMenuItem: NSMenuItem!
     public var backupDateMenuItem: NSMenuItem!
