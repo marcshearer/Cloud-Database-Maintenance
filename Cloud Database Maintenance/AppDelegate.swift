@@ -66,11 +66,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Update menu bar image
                     if let button = self.statusItem.button {
                         if self.database == "production" {
-                            button.image = NSImage(named:"spade")
+                            button.image = NSImage(systemSymbolName: "suit.spade.fill", accessibilityDescription: nil)!
                         } else if self.database == "development" {
-                            button.image = NSImage(named:"diamond")
+                            button.image = NSImage(systemSymbolName: "suit.diamond.fill", accessibilityDescription: nil)!
+                                // NSImage(named:"diamond")
                         } else {
-                            button.image = NSImage(named:"unknown")
+                            button.image = NSImage(systemSymbolName: "questionmark", accessibilityDescription: nil)!
                         }
                     }
                     
