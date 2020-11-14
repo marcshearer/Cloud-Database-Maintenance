@@ -31,7 +31,7 @@ class CheckDuplicateGames {
                 }
                 lastID = recordID
             }
-            completion("Success")
+            completion("No duplicates")
         }, failureAction: { (error) in
             completion("Error downloading games (\(self.iCloud.errorMessage(error)))")
         })
