@@ -21,7 +21,8 @@ class Config {
                                       "Notifications"   : ["playerUUID"],
                                       "Participants"    : ["datePlayed", "playerUUID", "gameUUID"],
                                       "Players"         : ["email"],
-                                      "Version"         : []]
+                                      "Version"         : [],
+                                      "Terms"           : []]
     
     public static let backupDirectoryDateFormat = "yyyy-MM-dd-HH-mm-ss-SSS"
     public static let backupDateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z"

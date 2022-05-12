@@ -277,6 +277,8 @@ class ICloud {
                         let value = self.value(forKey: column, keys: keys, assetsDirectory: assetsDirectory)
                         if let date = value as? Date {
                             recordID += Utility.dateString(date, format: Config.recordIdDateFormat, localized: false)
+                        } else if let int = value as? Int {
+                                recordID += "\(int)"
                         } else if value == nil {
                             if column.right(10).lowercased() == "playeruuid" {
                                 // Might not have them yet - TODO remove after go live
