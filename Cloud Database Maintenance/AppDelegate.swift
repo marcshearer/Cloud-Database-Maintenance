@@ -66,9 +66,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Update menu bar image
                     if let button = self.statusItem.button {
                         if self.database == "production" {
-                            button.image = NSImage(systemSymbolName: "suit.spade.fill", accessibilityDescription: nil)!
+                            button.image = NSImage(systemSymbolName: "icloud.and.arrow.up.fill", accessibilityDescription: nil)!
                         } else if self.database == "development" {
-                            button.image = NSImage(systemSymbolName: "suit.diamond.fill", accessibilityDescription: nil)!
+                            button.image = NSImage(systemSymbolName: "icloud.and.arrow.up", accessibilityDescription: nil)!
                                 // NSImage(named:"diamond")
                         } else {
                             button.image = NSImage(systemSymbolName: "questionmark", accessibilityDescription: nil)!
