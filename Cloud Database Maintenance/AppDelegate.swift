@@ -136,9 +136,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.restoreStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
             self.restoreStatusMenuItem.isHidden = true
         }
-        menu.addItem(withTitle: "Database maintenance", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "")
+        menu.addItem(withTitle: "View Database", action: #selector(AppDelegate.maintenance(_:)), keyEquivalent: "")
         menu.addItem(NSMenuItem.separator())
         
+        /*
         self.createLinksMenuItem = menu.addItem(withTitle: "Create links entries", action: #selector(AppDelegate.createLinks(_:)), keyEquivalent: "")
         self.createLinksStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
         self.createLinksStatusMenuItem.isHidden = true
@@ -152,7 +153,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.createReadableRecordIDsStatusMenuItem.isHidden = true
 
         menu.addItem(NSMenuItem.separator())
-
+        */
+        
         self.clearPrivateSettingsMenuItem = menu.addItem(withTitle: "Clear private settings", action: #selector(AppDelegate.confirmClearPrivateSettings(_:)), keyEquivalent: "")
          self.clearPrivateSettingsStatusMenuItem = menu.addItem(withTitle: "", action: nil, keyEquivalent: "")
          self.clearPrivateSettingsStatusMenuItem.isHidden = true
